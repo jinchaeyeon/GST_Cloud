@@ -7,6 +7,7 @@ import {
   CardBox,
   DetailBox,
   GridTitle,
+  HashtagConatiner,
   Title,
   TitleContainer,
 } from "../CommonStyled";
@@ -173,7 +174,7 @@ const Map: React.FC = () => {
       {selectedCard && (
         <DetailBox>
           <div>
-            <div>
+            <div className="top">
               <p className="title">수주현황조회</p>
               <Button
                 icon="x"
@@ -185,6 +186,12 @@ const Map: React.FC = () => {
               수주처리에서 등록한 데이터를 조회조건에 맞는 수주 건에 대해
               품목명, 단가 등을 포함한 상세한 정보를 리스트 형태로 조회합니다.
             </p>
+            <HashtagConatiner>
+              <div>#사출</div>
+              <div>#가공</div>
+              <div>#고도화1</div>
+              <div>#생산</div>
+            </HashtagConatiner>
             <div className="preview"></div>
             <Button themeColor={"primary"} icon="pdf" fillMode={"outline"}>
               메뉴얼 보기

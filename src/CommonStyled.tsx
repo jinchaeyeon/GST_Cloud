@@ -784,12 +784,12 @@ export const DetailBox = styled.div`
   flex-direction: column;
   justify-content: space-between;
 
-  > div > div {
+  .top {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  > div > div > button {
+  .top > button {
     width: auto;
   }
   .title {
@@ -906,5 +906,20 @@ export const DashboardBox = styled.div`
   strong {
     font-weight: 800;
     font-size: 32px;
+  }
+`;
+
+export const HashtagConatiner = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  gap: 5px;
+
+  div {
+    font-size: 14px;
+    padding: 5px;
+    text-align: center;
+    color: #2289c3;
+    border: solid 1px #2289c3;
+    border-radius: 20px;
   }
 `;
