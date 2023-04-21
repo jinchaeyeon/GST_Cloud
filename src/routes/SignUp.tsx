@@ -13,7 +13,7 @@ import { menusState, tokenState } from "../store/atoms";
 import { useApi } from "../hooks/api";
 import { useRecoilState } from "recoil";
 import { FormFile, FormInput } from "../components/Editors";
-import { AppName, FieldWrap, SignUpBox } from "../CommonStyled";
+import { AppName, FieldWrap, UserFormBox } from "../CommonStyled";
 import {
   Label,
   Error,
@@ -91,7 +91,7 @@ const Login: React.FC = () => {
   }, []);
 
   return (
-    <SignUpBox>
+    <UserFormBox>
       <Form
         onSubmit={handleSubmit}
         render={() => (
@@ -109,13 +109,13 @@ const Login: React.FC = () => {
             <h2>사용자 정보</h2>
             <FieldWrap fieldWidth="50%">
               <Field
-                name={"userId"}
+                name={"UserName"}
                 label={"이름"}
                 component={FormInput}
                 validator={emailValidator}
               />
               <Field
-                name={"userId"}
+                name={"UserId"}
                 label={"아이디"}
                 component={FormInput}
                 validator={emailValidator}
@@ -123,13 +123,13 @@ const Login: React.FC = () => {
             </FieldWrap>
             <FieldWrap fieldWidth="50%">
               <Field
-                name={"password"}
+                name={"Password"}
                 label={"비밀번호"}
                 type={"password"}
                 component={FormInput}
               />
               <Field
-                name={"password"}
+                name={"PasswordConfirm"}
                 label={"비밀번호 확인"}
                 type={"password"}
                 component={FormInput}
@@ -137,13 +137,13 @@ const Login: React.FC = () => {
             </FieldWrap>
             <FieldWrap fieldWidth="50%">
               <Field
-                name={"userId"}
+                name={"Email"}
                 label={"이메일"}
                 component={FormInput}
                 validator={emailValidator}
               />
               <Field
-                name={"userId"}
+                name={"PhoneNumber"}
                 label={"휴대폰 번호"}
                 component={FormInput}
                 validator={emailValidator}
@@ -162,13 +162,13 @@ const Login: React.FC = () => {
             <h2>회사 정보 (선택사항)</h2>
             <FieldWrap fieldWidth="50%">
               <Field
-                name={"userId"}
+                name={"CompanyName"}
                 label={"회사명"}
                 component={FormInput}
                 validator={emailValidator}
               />
               <Field
-                name={"userId"}
+                name={"BusinessNumber"}
                 label={"사업자 등록 번호"}
                 component={FormInput}
                 validator={emailValidator}
@@ -176,13 +176,13 @@ const Login: React.FC = () => {
             </FieldWrap>
             <FieldWrap fieldWidth="50%">
               <Field
-                name={"userId"}
+                name={"BusinessOwner"}
                 label={"대표자명"}
                 component={FormInput}
                 validator={emailValidator}
               />
               <Field
-                name={"userId"}
+                name={"BusinessAddress"}
                 label={"회사주소"}
                 component={FormInput}
                 validator={emailValidator}
@@ -190,27 +190,27 @@ const Login: React.FC = () => {
             </FieldWrap>
             <FieldWrap fieldWidth="50%">
               <Field
-                name={"userId"}
+                name={"BusinessLicense"}
                 label={"사업자등록증"}
                 component={FormFile}
                 validator={emailValidator}
               />
               <Field
-                name={"userId"}
+                name={"BusinessCard"}
                 label={"명함"}
                 component={FormFile}
                 validator={emailValidator}
               />
             </FieldWrap>
-            <FieldWrap fieldWidth="50%">
-              <Field
+            <FieldWrap fieldWidth="100%">
+              {/* <Field
                 name={"userId"}
                 label={"재직증명서"}
                 component={FormFile}
                 validator={emailValidator}
-              />
+              /> */}
               <Field
-                name={"userId"}
+                name={"BusinessType"}
                 label={"업종"}
                 component={FormInput}
                 validator={emailValidator}
@@ -238,7 +238,7 @@ const Login: React.FC = () => {
           </FormElement>
         )}
       ></Form>
-    </SignUpBox>
+    </UserFormBox>
   );
 };
 export default Login;

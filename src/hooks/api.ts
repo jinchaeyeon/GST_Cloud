@@ -6,11 +6,22 @@ import cachios from "cachios";
 let BASE_URL = process.env.REACT_APP_API_URL;
 
 const domain: any = {
-  /* CNTP API */
-  "db-usage": { action: "get", url: "api/dashboard/db-usage" },
-  query: { action: "post", url: "api/data/sql-query" },
-  modules: { action: "get", url: "api/dashboard/modules" },
-  login: { action: "post", url: "api/auth/login-dev" },
+  //로그인
+  login: { action: "post", url: "api/auth/login" },
+  //회원가입
+  "sign-up": { action: "post", url: "c/sign-up" },
+  //사용자정보 조회/수정/탈퇴
+  "user-info-view": { action: "get", url: "c/user/info" },
+  "user-info-save": { action: "post", url: "c/user/info" },
+  "user-info-delete": { action: "delete", url: "c/user/info" },
+  //승인 요청
+  "user-approval-request": { action: "post", url: "c/user/approval-request" },
+  //구독 메뉴 조회
+  "menus-view": { action: "get", url: "c/menu/list" },
+  "menu-view": { action: "get", url: "c/menu/:id" },
+  //메뉴 구독/구독해제
+  "menu-subscribe": { action: "post", url: "c/menu/subscribe" },
+  "menu-unsubscribe": { action: "post", url: "c/menu/unsubscribe" },
 
   /* GST 기존 API */
   procedure: { action: "post", url: "api/data/sql-procedure" },

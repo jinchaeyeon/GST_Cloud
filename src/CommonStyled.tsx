@@ -514,7 +514,7 @@ export const LoginBox = styled.div`
   }
 `;
 
-export const SignUpBox = styled(LoginBox)`
+export const UserFormBox = styled(LoginBox)`
   form {
     width: 700px;
     background-color: #fff;
