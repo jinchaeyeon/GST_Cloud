@@ -59,6 +59,7 @@ export const Content = styled.div<ContentType>`
 
 export const PageWrap = styled.div`
   padding: 0 20px;
+  margin-top: 40px;
 `;
 
 export const AppName = styled.h1`
@@ -755,6 +756,10 @@ export const CardBox = styled.div`
   }
 
   p {
+    width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-size: 18px;
     font-weight: 800;
   }
@@ -941,7 +946,7 @@ export const ServiceStoreContent = styled.div`
   flex-wrap: nowrap;
   overflow-x: auto;
   width: calc(100% + 20px);
-  height: calc(100vh - 90px);
+  height: calc(100vh - 130px);
 
   .item {
     flex: 0 0 auto;
@@ -961,5 +966,36 @@ export const FilterTextContainer = styled.div`
     height: 30px;
     width: 30px;
     color: gray;
+  }
+`;
+
+export const TopInfo = styled.div`
+  position: fixed;
+  display: flex;
+  height: 40px;
+  width: calc(100% - 180px);
+  border-bottom: solid 1px #dbdbdb;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 20px;
+  font-size: 13px;
+  color: #6e6e6e;
+  background-color: #f3f4f5;
+
+  p {
+    line-height: 20px;
+  }
+  .k-i-user {
+    color: #fff;
+    background-color: #6e6e6e;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border-radius: 30px;
+    font-size: 15px;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;

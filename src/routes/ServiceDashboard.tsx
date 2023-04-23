@@ -275,6 +275,7 @@ const Service: React.FC = () => {
             display: "grid",
             gap: "20px",
             height: "85vh",
+            gridTemplateRows: "2fr 1fr 1fr",
           }}
         >
           <GridContainerWrap
@@ -285,7 +286,7 @@ const Service: React.FC = () => {
           >
             <GridContainer>
               <GridTitle>서비스 측정</GridTitle>
-              <Chart>
+              <Chart style={{ height: "calc(100% - 35px)" }}>
                 <ChartCategoryAxis>
                   <ChartCategoryAxisItem
                     title={{ text: "월별 측정" }}
@@ -364,7 +365,7 @@ const Service: React.FC = () => {
           >
             <GridContainer>
               <GridTitle>모듈별 사용빈도</GridTitle>
-              <Chart style={{ height: "calc(100% - 70px)" }}>
+              <Chart style={{ height: "calc(100% - 35px)" }}>
                 <ChartSeries>
                   <ChartSeriesItem
                     type="funnel"
@@ -388,7 +389,7 @@ const Service: React.FC = () => {
             <GridContainer>
               <GridTitle>월별 사용내역</GridTitle>
               <Grid
-                style={{ height: "calc(100% - 70px)" }}
+                style={{ height: "calc(100% - 35px)" }}
                 data={process(
                   mainDataResult2.data.map((row) => ({
                     ...row,
