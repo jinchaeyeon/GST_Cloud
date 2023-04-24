@@ -15,9 +15,7 @@ import {
   Upload,
   UploadFileInfo,
   UploadOnAddEvent,
-  UploadOnProgressEvent,
   UploadOnRemoveEvent,
-  UploadOnStatusChangeEvent,
 } from "@progress/kendo-react-upload";
 import { Label, Error, Hint } from "@progress/kendo-react-labels";
 import { GridCellProps, GridFilterCellProps } from "@progress/kendo-react-grid";
@@ -581,6 +579,7 @@ export const FormUpload = (fieldRenderProps: FieldRenderProps) => {
           ariaLabelledBy={labelId}
           restrictions={{
             allowedExtensions: [".jpg", ".png"],
+            maxFileSize: 2000000,
           }}
           {...others}
         />

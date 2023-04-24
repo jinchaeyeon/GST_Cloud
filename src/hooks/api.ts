@@ -16,6 +16,7 @@ const domain: any = {
   "user-info-delete": { action: "delete", url: "c/user/info" },
   //승인 요청
   "user-approval-request": { action: "post", url: "c/user/approval-request" },
+  "user-approval-request-delete": { action: "delete", url: "c/user/approval-request" },
   //구독 메뉴 조회
   "menus-view": { action: "get", url: "c/menu/list" },
   "menu-view": { action: "get", url: "c/menu/:id" },

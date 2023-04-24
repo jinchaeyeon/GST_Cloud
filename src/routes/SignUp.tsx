@@ -30,117 +30,91 @@ const SignUp: React.FC = () => {
   const processApi = useApi();
 
   const handleSubmit = (data: { [name: string]: FormData }) => {
-    processLogin(data);
+    processSignUp(data);
   };
 
-  const processLogin = useCallback(
+  const processSignUp = useCallback(
     async (formData: { [name: string]: any }) => {
-      try {
-        let para = Object.assign({}, formData);
-        let data: any;
+      let para = Object.assign({}, formData);
+      let data: any;
+      if (
+        para.UserName == undefined ||
+        para.UserId == undefined ||
+        para.Password == undefined ||
+        para.PasswordConfirm == undefined ||
+        para.Email == undefined ||
+        para.PhoneNumber == undefined
+      ) {
+        alert("사용자 정보를 입력해주세요.");
+      } else if (para.Password !== para.PasswordConfirm) {
+        alert("비밀번호가 맞지 않습니다.");
+      } else {
         if (
-          para.UserName == undefined ||
-          para.UserId == undefined ||
-          para.Password == undefined ||
-          para.PasswordConfirm == undefined ||
-          para.Email == undefined
+          para.BusinessLicense == undefined &&
+          para.BusinessCard == undefined
         ) {
-          alert("사용자 정보를 입력해주세요.");
-        } else if (para.Password !== para.PasswordConfirm) {
-          alert("비밀번호가 맞지 않습니다.");
-        } else {
-          if (
-            para.CompanyName == undefined &&
-            para.BusinessNumber == undefined &&
-            para.BusinessOwner == undefined &&
-            para.BusinessAddress == undefined &&
-            para.BusinessType == undefined &&
-            para.BusinessLicense == undefined &&
-            para.BusinessCard == undefined
-          ) {
-            if (para.User_yn == true) {
-              setShowLoading(true);
-              try {
-                data = await processApi<any>("sign-up", para);
-              } catch (error) {
-                data = null;
-              }
-              
-              if(data != null) {
-                alert("회원가입이 완료되었습니다.")
-              }
-              history.replace("/ServiceDashboard");
-            } else {
-              alert("개인정보 이용 동의를 해주세요.");
+          if (para.User_yn == true && para.Bus_yn == true) {
+            setShowLoading(true);
+            try {
+              data = await processApi<any>("sign-up", para);
+            } catch (e: any) {
+              data = null;
+              console.log("Sign-up error", e);
+              //setShowLoading(false);
+              alert(e.message);
+            }
+
+            if (data != null) {
+              alert("회원가입이 완료되었습니다.");
+              history.replace("/");
             }
           } else {
-            if (para.Bus_yn == true) {
-              //&& para.Bus_OK_yn == true
-              setShowLoading(true);
-              if (para.BusinessLicense != undefined) {
-                var fileReader = new FileReader();
-                fileReader.readAsDataURL(para.BusinessLicense);
-                fileReader.onload = function (e) {
-                  if (e.target != null) {
-                    para.BusinessLicense = e.target.result
-                      ?.toString()
-                      .split(",")[1];
-                  }
-                };
-              }
-              setShowLoading(false);
-              if (para.BusinessCard != undefined) {
-                var fileReader = new FileReader();
-                fileReader.readAsDataURL(para.BusinessCard);
-                fileReader.onload = function (e) {
-                  if (e.target != null) {
-                    para.BusinessCard = e.target.result
-                      ?.toString()
-                      .split(",")[1];
-                  }
-                };
-              }
-              try {
-                data = await processApi<any>("sign-up", para);
-              } catch (error) {
-                data = null;
-              }
-              
-              if(data != null) {
-                alert("회원가입이 완료되었습니다.")
-              }
-              // const userPara = {
-              //   CompanyName: para.CompanyName,
-              //   BusinessType: para.BusinessType,
-              //   BusinessNumber: para.BusinessNumber,
-              //   BusinessLicense: para.BusinessLicense,
-              //   BusinessOwner: para.BusinessOwner,
-              //   BusinessAddress: para.BusinessAddress,
-              // }
-
-              // if(userPara.BusinessLicense != undefined) {
-              //   var fileReader = new FileReader();
-              //   fileReader.readAsDataURL(userPara.BusinessLicense);
-              //   fileReader.onload = function(e) {
-              //     if(e.target != null) {
-              //       userPara.BusinessLicense = e.target.result?.toString().split(",")[1];
-              //     }
-              //   }
-              // }
-
-              // const response2 = await processApi<any>("user-approval-request", userPara);
-              history.replace("/ServiceDashboard");
-
-              setShowLoading(false);
-            } else {
-              alert("기업정보 이용 동의를 해주세요.");
+            alert("이용 동의를 해주세요");
+          }
+        } else {
+          if (para.User_yn == true &&para.Bus_yn == true) {
+            //&& para.Bus_OK_yn == true
+            setShowLoading(true);
+            if (para.BusinessLicense != undefined) {
+              var fileReader = new FileReader();
+              fileReader.readAsDataURL(para.BusinessLicense);
+              fileReader.onload = function (e) {
+                if (e.target != null) {
+                  para.BusinessLicense = e.target.result
+                    ?.toString()
+                    .split(",")[1];
+                }
+              };
             }
+            setShowLoading(false);
+            if (para.BusinessCard != undefined) {
+              var fileReader = new FileReader();
+              fileReader.readAsDataURL(para.BusinessCard);
+              fileReader.onload = function (e) {
+                if (e.target != null) {
+                  para.BusinessCard = e.target.result?.toString().split(",")[1];
+                }
+              };
+            }
+            try {
+              data = await processApi<any>("sign-up", para);
+            } catch (e: any) {
+              data = null;
+              console.log("Sign-up error", e);
+              //setShowLoading(false);
+              alert(e.message);
+            }
+
+            if (data != null) {
+              alert("회원가입이 완료되었습니다.");
+              history.replace("/");
+            }
+
+            setShowLoading(false);
+          } else {
+            alert("이용 동의를 해주세요");
           }
         }
-      } catch (e: any) {
-        console.log("Sign-up error", e);
-        //setShowLoading(false);
-        alert(e.message);
       }
     },
     []

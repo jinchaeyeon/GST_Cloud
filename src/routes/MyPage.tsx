@@ -26,7 +26,7 @@ const MyPage: React.FC = () => {
   const [token, setToken] = useRecoilState(tokenState);
   const [menus, setMenus] = useRecoilState(menusState);
   const setShowLoading = useSetRecoilState(isLoading);
-  // const [bizyn, setBizyn] = useState<boolean>(false);
+  const [state, setState] = useState<number>(0);
   const history = useHistory();
   const processApi = useApi();
 
@@ -43,6 +43,9 @@ const MyPage: React.FC = () => {
     businessLicense: "",
     businessCard: "",
     businessAddress: "",
+    requestDate: "",
+    approvalDate: "",
+    companyCode: "",
   });
 
   const [formKey, setFormKey] = useState(1);
@@ -59,139 +62,225 @@ const MyPage: React.FC = () => {
     resetForm();
   }, [initialVal]);
 
-  const handleSubmit = (data: { [name: string]: FormData }) => {
-    processLogin(data);
+  const onSubmit = (data: any, buttonType: string) => {
+    if (buttonType === "submit1") {
+      processUpdate(data);
+    } else if (buttonType === "submit2") {
+      if(state == 0) {
+        processBiz(data);
+      } else if(state == 1) {
+        processBizCancel();
+      }
+    }
   };
 
-  const processLogin = useCallback(
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const buttonType = event.currentTarget.name;
+
+    // 폼 데이터를 가져옵니다.
+    const formData = new FormData(event.currentTarget.form as HTMLFormElement);
+    const data = Object.fromEntries(formData.entries());
+
+    onSubmit(data, buttonType);
+  };
+
+  const processUpdate = useCallback(
     async (formData: { [name: string]: any }) => {
-      try {
-        let para = Object.assign({}, formData);
+      let para = Object.assign({}, formData);
+      let data: any;
+      if (
+        para.UserName == undefined ||
+        para.UserId == undefined ||
+        para.Email == undefined
+      ) {
+        alert("사용자 정보를 입력해주세요.");
+      } else if (
+        para.password == "" &&
+        para.Password !== para.PasswordConfirm
+      ) {
+        alert("비밀번호가 맞지 않습니다.");
+      } else {
         if (
-          para.UserName == undefined ||
-          para.UserId == undefined ||
-          para.Email == undefined
+          para.CompanyName == "" &&
+          para.BusinessNumber == "" &&
+          para.BusinessOwner == "" &&
+          para.BusinessAddress == "" &&
+          para.BusinessType == "" &&
+          para.BusinessLicense == "" &&
+          para.BusinessCard == ""
         ) {
-          alert("사용자 정보를 입력해주세요.");
-        } else if (
-          para.password == "" &&
-          para.Password !== para.PasswordConfirm
-        ) {
-          alert("비밀번호가 맞지 않습니다.");
+          setShowLoading(true);
+          try {
+            data = await processApi<any>("user-info-save", para);
+          } catch (e: any) {
+            data = null;
+            console.log("MyPage error", e);
+            //setShowLoading(false);
+            alert(e.message);
+          }
+          if (data != null) {
+            alert("수정이 완료되었습니다.");
+            fetchUser();
+          }
         } else {
+          setShowLoading(true);
           if (
-            para.CompanyName == "" &&
-            para.BusinessNumber == "" &&
-            para.BusinessOwner == "" &&
-            para.BusinessAddress == "" &&
-            para.BusinessType == "" &&
-            para.BusinessLicense == "" &&
-            para.BusinessCard == ""
+            para.BusinessLicense != "" &&
+            typeof para.BusinessLicense == "object"
           ) {
-            setShowLoading(true);
-            const response = await processApi<any>("user-info-save", para);
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(para.BusinessLicense);
+            fileReader.onload = function (e) {
+              if (e.target != null) {
+                para.BusinessLicense = e.target.result
+                  ?.toString()
+                  .split(",")[1];
+              }
+            };
+          }
 
-            history.replace("/MyPage");
-          } else {
-            setShowLoading(true);
-            if (
-              para.BusinessLicense != "" &&
-              typeof para.BusinessLicense == "object"
-            ) {
-              var fileReader = new FileReader();
-              fileReader.readAsDataURL(para.BusinessLicense);
-              fileReader.onload = function (e) {
-                if (e.target != null) {
-                  para.BusinessLicense = e.target.result
-                    ?.toString()
-                    .split(",")[1];
-                }
-              };
-            }
+          if (para.BusinessCard != "" && typeof para.BusinessCard == "object") {
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(para.BusinessCard);
+            fileReader.onload = function (e) {
+              if (e.target != null) {
+                para.BusinessCard = e.target.result?.toString().split(",")[1];
+              }
+            };
+          }
 
-            if (
-              para.BusinessCard != "" &&
-              typeof para.BusinessCard == "object"
-            ) {
-              var fileReader = new FileReader();
-              fileReader.readAsDataURL(para.BusinessCard);
-              fileReader.onload = function (e) {
-                if (e.target != null) {
-                  para.BusinessCard = e.target.result?.toString().split(",")[1];
-                }
-              };
-            }
-
-            const response = await processApi<any>("user-info-save", para);
-            setShowLoading(false);
-            // const userPara = {
-            //   CompanyName: para.CompanyName,
-            //   BusinessType: para.BusinessType,
-            //   BusinessNumber: para.BusinessNumber,
-            //   BusinessLicense: para.BusinessLicense,
-            //   BusinessOwner: para.BusinessOwner,
-            //   BusinessAddress: para.BusinessAddress,
-            // }
-
-            // if(userPara.BusinessLicense != undefined) {
-            //   var fileReader = new FileReader();
-            //   fileReader.readAsDataURL(userPara.BusinessLicense);
-            //   fileReader.onload = function(e) {
-            //     if(e.target != null) {
-            //       userPara.BusinessLicense = e.target.result?.toString().split(",")[1];
-            //     }
-            //   }
-            // }
-
-            // const response2 = await processApi<any>("user-approval-request", userPara);
-            history.replace("/MyPage");
-
-            setShowLoading(false);
+          try {
+            data = await processApi<any>("user-info-save", para);
+          } catch (e: any) {
+            data = null;
+            console.log("MyPage error", e);
+            //setShowLoading(false);
+            alert(e.message);
+          }
+          setShowLoading(false);
+          if (data != null) {
+            alert("수정이 완료되었습니다.");
+        fetchUser();
           }
         }
-      } catch (e: any) {
-        console.log("MyPage error", e);
-        //setShowLoading(false);
-        alert(e.message);
       }
     },
     []
   );
 
-  useEffect(() => {
-    async function fetchUser() {
-      const response = await processApi<any>("user-info-view");
+  const processBiz = useCallback(async (formData: { [name: string]: any }) => {
+    let para = Object.assign({}, formData);
+    let data: any;
+    if (
+      para.CompanyName != "" &&
+      para.BusinessNumber != "" &&
+      para.BusinessOwner != "" &&
+      para.BusinessAddress != "" &&
+      para.BusinessType != "" &&
+      para.BusinessLicense != "" &&
+      para.BusinessCard != ""
+    ) {
+      setShowLoading(true);
+      const userPara = {
+        CompanyName: para.CompanyName,
+        BusinessType: para.BusinessType,
+        BusinessNumber: para.BusinessNumber,
+        BusinessLicense: para.BusinessLicense,
+        BusinessOwner: para.BusinessOwner,
+        BusinessAddress: para.BusinessAddress,
+      };
 
-      setInitialVal((prev) => {
-        return {
-          ...prev,
-          businessAddress:
-            response.businessAddress != undefined
-              ? response.businessAddress
-              : "",
-          businessCard:
-            response.businessCard != undefined ? response.businessCard : "",
-          businessLicense:
-            response.businessLicense != undefined
-              ? response.businessLicense
-              : "",
-          businessNumber:
-            response.businessNumber != undefined ? response.businessNumber : "",
-          businessOwner:
-            response.businessOwner != undefined ? response.businessOwner : "",
-          businessType:
-            response.businessType != undefined ? response.businessType : "",
-          companyName:
-            response.companyName != undefined ? response.companyName : "",
-          email: response.email,
-          phoneNumber: response.phoneNumber,
-          userId: response.userId,
-          userName: response.userName,
+      if (userPara.BusinessLicense != undefined) {
+        var fileReader = new FileReader();
+        fileReader.readAsDataURL(userPara.BusinessLicense);
+        fileReader.onload = function (e) {
+          if (e.target != null) {
+            userPara.BusinessLicense = e.target.result
+              ?.toString()
+              .split(",")[1];
+          }
         };
-      });
+      }
+
+      try {
+        data = await processApi<any>("user-info-save", para);
+      } catch (e: any) {
+        data = null;
+        console.log("MyPage error", e);
+        //setShowLoading(false);
+        alert(e.message);
+      }
+
+      if(data != null) {
+        data = [];
+        try {
+          data = await processApi<any>("user-approval-request", userPara);
+        } catch (e: any) {
+          data = null;
+          console.log("MyPage error", e);
+          //setShowLoading(false);
+          alert(e.message);
+        }
+      }
+
+      if (data != null) {
+        alert("승인 요청이 완료되었습니다.");
+        fetchUser();
+      }
+      setShowLoading(false);
+    } else {
+      alert("회사 정보를 채워주세요.");
     }
+  }, []);
+
+  useEffect(() => {
     fetchUser();
   }, []);
+
+  async function fetchUser() {
+    const response = await processApi<any>("user-info-view");
+
+    setInitialVal((prev) => {
+      return {
+        ...prev,
+        businessAddress:
+          response.businessAddress != undefined
+            ? response.businessAddress
+            : "",
+        businessCard:
+          response.businessCard != undefined ? response.businessCard : "",
+        businessLicense:
+          response.businessLicense != undefined
+            ? response.businessLicense
+            : "",
+        businessNumber:
+          response.businessNumber != undefined ? response.businessNumber : "",
+        businessOwner:
+          response.businessOwner != undefined ? response.businessOwner : "",
+        businessType:
+          response.businessType != undefined ? response.businessType : "",
+        companyName:
+          response.companyName != undefined ? response.companyName : "",
+        email: response.email,
+        phoneNumber: response.phoneNumber,
+        userId: response.userId,
+        userName: response.userName,
+        password: "",
+        requestDate: response.requestDate,
+        approvalDate: response.approvalDate,
+        companyCode: response.companyCode,
+      };
+    });
+
+    if (response.requestDate == "" && response.approvalDate == "") {
+      setState(0);
+    } else if (response.requestDate != "" && response.approvalDate == "") {
+      setState(1);
+    } else if (response.requestDate != "" && response.approvalDate != "") {
+      setState(2);
+    }
+  }
 
   const onDeleteUser = async () => {
     if (!window.confirm("회원 탈퇴하시겠습니까?")) {
@@ -201,6 +290,14 @@ const MyPage: React.FC = () => {
     setToken(null as any);
     setMenus(null as any);
     history.replace("/ServiceDashboard");
+  };
+
+  const processBizCancel = async () => {
+    if (!window.confirm("승인 취소하시겠습니까?")) {
+      return false;
+    }
+    const response = await processApi<any>("user-approval-request-delete");
+    fetchUser();
   };
 
   const emailValidator = (value: string) =>
@@ -224,7 +321,6 @@ const MyPage: React.FC = () => {
           BusinessCard: initialVal.businessCard,
           BusinessAddress: initialVal.businessAddress,
         }}
-        onSubmit={handleSubmit}
         render={(formRenderProps: FormRenderProps) => (
           <FormElement horizontal={true}>
             <button
@@ -290,9 +386,6 @@ const MyPage: React.FC = () => {
                 validator={emailValidator}
               />
             </FieldWrap>
-            <Button className="sign-up-btn" themeColor={"primary"}>
-              수정
-            </Button>
             <hr />
             <h2>회사 정보 (선택사항)</h2>
             <FieldWrap fieldWidth="50%">
@@ -340,16 +433,34 @@ const MyPage: React.FC = () => {
                 component={FormUpload}
               />
             </FieldWrap>
-            <Button className="sign-up-btn" themeColor={"primary"}>
+            <Button
+              onClick={handleClick}
+              className="sign-up-btn"
+              themeColor={"primary"}
+              name="submit1"
+            >
               수정
             </Button>
+            {state != 2 ? (
+              <Button
+                onClick={handleClick}
+                className="sign-up-btn"
+                themeColor={"primary"}
+                name="submit2"
+                fillMode={state == 0 ? "solid" : "outline"}
+              >
+                {state == 0 ? "기업 승인 요청" : "기업 승인 요청 취소"}
+              </Button>
+            ) : (
+              ""
+            )}
             <Button
               className="sign-out-btn"
               type="button"
               themeColor={"info"}
               fillMode="outline"
               onClick={onDeleteUser}
-              style={{ width: "100%", marginTop: "20px", height: "50px" }}
+              style={{ width: "100%", marginTop: "30px", height: "50px" }}
             >
               회원 탈퇴
             </Button>
