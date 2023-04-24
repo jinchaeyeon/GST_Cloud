@@ -271,16 +271,23 @@ const Service: React.FC = () => {
           <GridTitle>이용중인 메뉴</GridTitle>
           <UsedMenusBox>
             {mainDataResult &&
-              mainDataResult.map(
+              mainDataResult.filter(
                 (data) =>
                   data.category === "GROUP" &&
-                  data.subscribed == true && (
-                    <UsedMenus
-                      title={data.menuName}
-                      mainDataResult={list(data.menuId)}
-                    />
-                  )
-              )}
+                  data.subscribed == true
+              ).length == 0 ? (
+                <p style={{textAlign : "center", paddingTop: `calc(50% - 35px)`, fontWeight: "bolder", color: "gray"}}>구독 중인 메뉴가 없습니다.</p>
+              ) : mainDataResult &&
+                mainDataResult.map(
+                  (data) =>
+                    data.category === "GROUP" &&
+                    data.subscribed == true && (
+                      <UsedMenus
+                        title={data.menuName}
+                        mainDataResult={list(data.menuId)}
+                      />
+                    )
+                )}
           </UsedMenusBox>
         </GridContainer>
         <GridContainer
