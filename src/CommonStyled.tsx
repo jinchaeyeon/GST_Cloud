@@ -59,6 +59,7 @@ export const Content = styled.div<ContentType>`
 
 export const PageWrap = styled.div`
   padding: 0 20px;
+  margin-top: 40px;
 `;
 
 export const AppName = styled.h1`
@@ -602,7 +603,7 @@ export const ApprovalInner = styled.div`
 
 export const InfoList = styled.ul`
   display: flex;
-  gap: 20px;
+  gap: 25px;
   display: flex;
   flex-direction: column;
   border: solid 1px #ebebeb;
@@ -741,6 +742,9 @@ export const CardBox = styled.div`
   gap: 5px;
   cursor: pointer;
 
+  .k-card {
+    min-width: 250px;
+  }
   .k-card:hover {
     background-color: #f9f9f9;
   }
@@ -752,6 +756,10 @@ export const CardBox = styled.div`
   }
 
   p {
+    width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-size: 18px;
     font-weight: 800;
   }
@@ -783,6 +791,7 @@ export const DetailBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  z-index: 2;
 
   .top {
     display: flex;
@@ -816,11 +825,17 @@ export const DetailBox = styled.div`
     color: #ff6358;
   }
   .preview {
-    background-image: url("preview.png");
+    /* background-image: url("preview.png"); */
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
     height: 230px;
+  }
+  .preview .k-i-image {
+    width: 100%;
+    height: 100%;
+    font-size: 100px;
+    color: #dbdbdb;
   }
   p {
     padding: 20px 0;
@@ -921,5 +936,66 @@ export const HashtagConatiner = styled.div`
     color: #2289c3;
     border: solid 1px #2289c3;
     border-radius: 20px;
+  }
+`;
+
+export const ServiceStoreContent = styled.div`
+  display: flex;
+  gap: 20px;
+  padding-bottom: 20px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  width: calc(100% + 20px);
+  height: calc(100vh - 130px);
+
+  .item {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+  }
+`;
+
+export const FilterTextContainer = styled.div`
+  position: relative;
+  .k-i-search {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    height: 30px;
+    width: 30px;
+    color: gray;
+  }
+`;
+
+export const TopInfo = styled.div`
+  position: fixed;
+  display: flex;
+  height: 40px;
+  width: calc(100% - 180px);
+  border-bottom: solid 1px #dbdbdb;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 20px;
+  font-size: 13px;
+  color: #6e6e6e;
+  background-color: #f3f4f5;
+
+  p {
+    line-height: 20px;
+  }
+  .k-i-user {
+    color: #fff;
+    background-color: #6e6e6e;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border-radius: 30px;
+    font-size: 15px;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;

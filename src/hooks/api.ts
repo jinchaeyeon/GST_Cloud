@@ -20,8 +20,10 @@ const domain: any = {
   "menus-view": { action: "get", url: "c/menu/list" },
   "menu-view": { action: "get", url: "c/menu/:id" },
   //메뉴 구독/구독해제
-  "menu-subscribe": { action: "post", url: "c/menu/subscribe" },
-  "menu-unsubscribe": { action: "post", url: "c/menu/unsubscribe" },
+  "menu-subscribe": { action: "post", url: "c/menu/:para" },
+  "menu-unsubscribe": { action: "post", url: "c/menu/:para" },
+  //매뉴얼 다운로드
+  "manual-download": { action: "get", url: "api/files/manual/:id" },
 
   /* GST 기존 API */
   procedure: { action: "post", url: "api/data/sql-procedure" },
@@ -110,33 +112,44 @@ export const useApi = () => {
       url = `${BASE_URL}${url}`;
 
       let headers = {};
-      if (name === "file-upload" || name === "file-download")
+      if (
+        name === "file-upload" ||
+        name === "file-download" ||
+        name === "manual-download"
+      ) {
         headers = {
           "Content-Type": "multipart/form-data",
           responseType: "stream",
           accept: "*/*",
         };
-      if (name === "file-list"|| name === "sign-up" || name === "user-approval-request")
+      }
+      if (name === "file-list"|| name === "sign-up" || name === "user-approval-request"){
         headers = { "Content-Type": "multipart/form-data", accept: "*/*" };
+      }
 
       if (name === "platform-procedure" || name === "platform-query")
         headers = { ...headers, DBAlias: "Platform" };
 
       if (token) {
         headers = { ...headers, Authorization: `Bearer ${token.token}` };
-        // headers = { ...headers, CultureName: token.langCode };
       }
 
       if (info.action != "get") {
         initCache();
       }
 
+      const getHeader: any = {
+        params: params,
+        headers: headers,
+      };
+
+      if (name === "file-download" || name === "manual-download") {
+        getHeader.responseType = "blob";
+      }
+
       switch (info.action) {
         case "get":
-          p = cachedHttp.get(url, {
-            params: params,
-            headers: headers,
-          });
+          p = cachedHttp.get(url, getHeader);
           break;
         case "post":
           p = axiosInstance.post(url, params, { headers: headers });
@@ -158,7 +171,7 @@ export const useApi = () => {
       }
       return p
         .then((response: any) => {
-          return name === "file-download"
+          return name === "file-download" || name === "manual-download"
             ? resolve(response)
             : resolve(response.data);
         })

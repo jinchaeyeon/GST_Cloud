@@ -18,6 +18,7 @@ import {
   Gnv,
   Modal,
   PageWrap,
+  TopInfo,
   TopTitle,
   Wrapper,
 } from "../CommonStyled";
@@ -28,6 +29,7 @@ const PanelBarNavContainer = (props: any) => {
   const [token, setToken] = useRecoilState(tokenState);
   const [isMenuOpend, setIsMenuOpend] = useRecoilState(isMenuOpendState);
   const companyCode = token ? token.companyCode : "";
+  const userName = token ? token.userName : "";
   const userId = token ? token.userId : "";
   const loginKey = token ? token.loginKey : "";
   const [previousRoute, setPreviousRoute] = useState("");
@@ -81,10 +83,6 @@ const PanelBarNavContainer = (props: any) => {
     // 전체 페이지 reload (cache 삭제)
     (window as any).location = "/";
   }, []);
-
-  const onClickUserOptions = () => {
-    setUserOptionsWindowVisible(true);
-  };
 
   const onMenuBtnClick = () => {
     setIsMenuOpend((prev) => !prev);
@@ -146,6 +144,12 @@ const PanelBarNavContainer = (props: any) => {
             onClick={onMenuBtnClick}
           />
         </TopTitle>
+        <TopInfo>
+          <p>
+            <span className="k-icon k-i-user"></span>
+            {userName}({userId})
+          </p>
+        </TopInfo>
         <PageWrap>{props.children}</PageWrap>
       </Content>
       {userOptionsWindowVisible && (
