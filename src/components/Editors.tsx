@@ -11,7 +11,14 @@ import {
   FieldRenderProps,
   FieldWrapper,
 } from "@progress/kendo-react-form";
-import { Upload, UploadFileInfo, UploadOnAddEvent, UploadOnProgressEvent, UploadOnRemoveEvent, UploadOnStatusChangeEvent } from "@progress/kendo-react-upload";
+import {
+  Upload,
+  UploadFileInfo,
+  UploadOnAddEvent,
+  UploadOnProgressEvent,
+  UploadOnRemoveEvent,
+  UploadOnStatusChangeEvent,
+} from "@progress/kendo-react-upload";
 import { Label, Error, Hint } from "@progress/kendo-react-labels";
 import { GridCellProps, GridFilterCellProps } from "@progress/kendo-react-grid";
 import { DatePicker } from "@progress/kendo-react-dateinputs";
@@ -488,9 +495,9 @@ export const FormUpload = (fieldRenderProps: FieldRenderProps) => {
   const [affectedFiles, setAffectedFiles] = React.useState<UploadFileInfo>();
   const [files, setFiles] = React.useState<Array<UploadFileInfo>>([]);
   React.useEffect(() => {
-        if (affectedFiles && affectedFiles.getRawFile) {
-          fieldRenderProps.onChange({ value: affectedFiles.getRawFile() });
-        }
+    if (affectedFiles && affectedFiles.getRawFile) {
+      fieldRenderProps.onChange({ value: affectedFiles.getRawFile() });
+    }
   }, [affectedFiles]);
 
   const onAdd = (event: UploadOnAddEvent) => {
@@ -508,22 +515,43 @@ export const FormUpload = (fieldRenderProps: FieldRenderProps) => {
       <Label id={labelId} editorId={id} optional={optional}>
         {label}
       </Label>
-      <Upload
-        id={id}
-        autoUpload={false}
-        showActionButtons={false}
-        multiple={false}
-        files={files}
-        onAdd={onAdd}
-        onRemove={onRemove}
-        ariaDescribedBy={`${hintId} ${errorId}`}
-        ariaLabelledBy={labelId}
-        {...others}
-      />
+      <div
+        className={"k-form-field-wrap"}
+        style={{
+          textAlign: "right",
+        }}
+      >
+        <Upload
+          id={id}
+          selectMessageUI={test}
+          autoUpload={false}
+          showActionButtons={false}
+          multiple={false}
+          files={files}
+          onAdd={onAdd}
+          onRemove={onRemove}
+          ariaDescribedBy={`${hintId} ${errorId}`}
+          ariaLabelledBy={labelId}
+          {...others}
+        />
+        <Button
+          icon="image"
+          themeColor={"primary"}
+          size={"small"}
+          fillMode={"outline"}
+          style={{ marginTop: "10px" }}
+          disabled={true}
+        >
+          미리보기
+        </Button>
+      </div>
     </FieldWrapper>
   );
 };
 
+const test = () => {
+  return <>파일 선택</>;
+};
 //Form Field에서 사용되는 NumericTextBox
 export const FormNumericTextBox = (fieldRenderProps: FieldRenderProps) => {
   const { validationMessage, visited, label, id, valid, ...others } =
