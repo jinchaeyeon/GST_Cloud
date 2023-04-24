@@ -106,6 +106,59 @@ const Map: React.FC = () => {
     }
     setLoading(false);
   };
+  const fetchSubscribe = async () => {
+    let data: any;
+    if (!detailDataResult) {
+      console.log("No detailDataResult for fetchSubscribe");
+      return false;
+    }
+    if (!window.confirm(detailDataResult.menuName + "을 구독하시겠습니까?"))
+      return false;
+
+    setLoading(true);
+
+    const para = { para: `subscribe?id=${detailDataResult.menuId}` };
+    try {
+      data = await processApi<any>("menu-subscribe", para);
+    } catch (error) {
+      data = null;
+    }
+
+    if (data !== null) {
+      fetchMainData();
+      fetchDetailData(detailDataResult.menuId);
+    } else {
+      console.log("[에러발생]");
+      console.log(data);
+    }
+    setLoading(false);
+  };
+
+  const fetchUnsubscribe = async () => {
+    let data: any;
+    if (!detailDataResult) {
+      console.log("No detailDataResult for fetchUnsubscribe");
+      return false;
+    }
+    setLoading(true);
+    if (!window.confirm("구독을 해제하시겠습니까?")) return false;
+    const para = { para: `unsubscribe?id=${detailDataResult.menuId}` };
+
+    try {
+      data = await processApi<any>("menu-unsubscribe", para);
+    } catch (error) {
+      data = null;
+    }
+
+    if (data !== null) {
+      fetchMainData();
+      fetchDetailData(detailDataResult.menuId);
+    } else {
+      console.log("[에러발생]");
+      console.log(data);
+    }
+    setLoading(false);
+  };
 
   const handleCardClick = (id: string) => {
     setSelectedCard({ id });
@@ -176,30 +229,48 @@ const Map: React.FC = () => {
             </Button>
           </div>
           <div>
-            <del className="org-amt">
-              정가{" "}
-              {numberWithCommas(
-                detailDataResult.price ? Number(detailDataResult.price) : 6000
-              )}
-              원
-            </del>
-            <p className="amt">
-              <span>할인가</span> 월
-              {numberWithCommas(
-                (detailDataResult.price
-                  ? Number(detailDataResult.price)
-                  : 6000) *
-                  ((100 - 40) / 100)
-              )}
-              원
-            </p>
-            <Button
-              themeColor={"primary"}
-              fillMode={"solid"}
-              className="important"
-            >
-              구독하기
-            </Button>
+            {!detailDataResult.subscribed && (
+              <>
+                <del className="org-amt">
+                  정가{" "}
+                  {numberWithCommas(
+                    detailDataResult.price
+                      ? Number(detailDataResult.price)
+                      : 6000
+                  )}
+                  원
+                </del>
+                <p className="amt">
+                  <span>할인가</span> 월
+                  {numberWithCommas(
+                    (detailDataResult.price
+                      ? Number(detailDataResult.price)
+                      : 6000) *
+                      ((100 - 40) / 100)
+                  )}
+                  원
+                </p>
+              </>
+            )}
+            {detailDataResult.subscribed ? (
+              <Button
+                themeColor={"primary"}
+                fillMode={"outline"}
+                className="important"
+                onClick={fetchUnsubscribe}
+              >
+                구독해제
+              </Button>
+            ) : (
+              <Button
+                themeColor={"primary"}
+                fillMode={"solid"}
+                className="important"
+                onClick={fetchSubscribe}
+              >
+                구독하기
+              </Button>
+            )}
           </div>
         </DetailBox>
       )}

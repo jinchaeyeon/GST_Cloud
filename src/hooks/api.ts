@@ -20,8 +20,8 @@ const domain: any = {
   "menus-view": { action: "get", url: "c/menu/list" },
   "menu-view": { action: "get", url: "c/menu/:id" },
   //메뉴 구독/구독해제
-  "menu-subscribe": { action: "post", url: "c/menu/subscribe" },
-  "menu-unsubscribe": { action: "post", url: "c/menu/unsubscribe" },
+  "menu-subscribe": { action: "post", url: "c/menu/:para" },
+  "menu-unsubscribe": { action: "post", url: "c/menu/:para" },
 
   /* GST 기존 API */
   procedure: { action: "post", url: "api/data/sql-procedure" },
