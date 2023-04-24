@@ -90,18 +90,13 @@ const Login: React.FC = () => {
           <FormElement horizontal={true}>
             <AppName
               style={{
-                backgroundPosition: "45px",
+                backgroundPosition: "30px",
                 paddingLeft: "70px",
               }}
             >
               GST Cloud Store
             </AppName>
-            <Field
-              name={"userId"}
-              label={"ID"}
-              component={FormInput}
-              validator={emailValidator}
-            />
+            <Field name={"userId"} label={"ID"} component={FormInput} />
             <Field
               name={"password"}
               label={"PASSWORD"}

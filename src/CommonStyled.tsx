@@ -60,6 +60,12 @@ export const Content = styled.div<ContentType>`
 export const PageWrap = styled.div`
   padding: 0 20px;
   margin-top: 40px;
+  width: calc(100vw - 180px);
+
+  @media (max-width: 768px) {
+    margin-top: 0;
+    width: 100%;
+  }
 `;
 
 export const AppName = styled.h1`
@@ -85,6 +91,8 @@ export const AppName = styled.h1`
   =========================================================================*/
   @media (max-width: 768px) {
     border: none;
+    background-position: center;
+    padding-left: 0;
   }
 `;
 
@@ -132,6 +140,12 @@ export const TitleContainer = styled.div`
 
   .iot-title {
     font-size: 26px;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
   }
 `;
 
@@ -482,6 +496,22 @@ export const FieldWrap = styled.div<TFieldWrap>`
   .readonly {
     background-color: #efefef;
   }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    > .k-form-field {
+      width: 100%;
+    }
+    .k-form-field > .k-label,
+    .k-form-field > kendo-label,
+    .k-form-field > .k-form-label {
+      width: 20% !important;
+    }
+    .k-form-field-wrap {
+      max-width: calc(80% - 10px) !important;
+    }
+  }
 `;
 
 export const LoginBox = styled.div`
@@ -516,6 +546,9 @@ export const LoginBox = styled.div`
 `;
 
 export const UserFormBox = styled(LoginBox)`
+  height: auto;
+  padding-bottom: 0;
+
   form {
     width: 700px;
     background-color: #fff;
@@ -748,6 +781,11 @@ export const CardBox = styled.div`
   .k-card:hover {
     background-color: #f9f9f9;
   }
+  .k-card-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
   .focused {
     background-color: #fff;
@@ -756,26 +794,36 @@ export const CardBox = styled.div`
   }
 
   p {
-    width: 160px;
+    width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-size: 18px;
     font-weight: 800;
+    margin: 0;
   }
-  p span {
+  .subscribe-badge {
     background-color: #ace394;
-    width: 70px;
-    height: 50%;
-    position: absolute;
-    right: 10px;
+    width: 75px;
+    height: 30px;
     font-size: 14px;
-    text-align: center;
     font-weight: 400;
     color: #3e5c31;
-    line-height: 30px;
     border-radius: 80px;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(1, 1fr);
+
+    .k-card {
+      min-width: 220px;
+    }
+    .subscribe-badge {
+      width: 70px;
+    }
   }
 `;
 
@@ -792,6 +840,10 @@ export const DetailBox = styled.div`
   flex-direction: column;
   justify-content: space-between;
   z-index: 2;
+
+  // ios 모바일 뷰 디바이스 높이 오류 방지
+  height: -webkit-fill-available;
+  height: fill-available;
 
   .top {
     display: flex;
@@ -849,6 +901,11 @@ export const DetailBox = styled.div`
     height: 60px;
     font-size: 20px;
     font-weight: 900;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 20px;
   }
 `;
 
@@ -952,7 +1009,15 @@ export const ServiceStoreContent = styled.div`
     flex: 0 0 auto;
     display: flex;
     flex-direction: column;
-    width: 30%;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    flex-direction: column;
+    height: calc(100vh - 160px);
+    .item {
+      width: 100%;
+    }
   }
 `;
 
@@ -973,7 +1038,7 @@ export const TopInfo = styled.div`
   position: fixed;
   display: flex;
   height: 40px;
-  width: calc(100% - 180px);
+  width: calc(100vw - 180px);
   border-bottom: solid 1px #dbdbdb;
   justify-content: flex-end;
   align-items: center;

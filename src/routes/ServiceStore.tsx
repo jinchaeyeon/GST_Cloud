@@ -254,7 +254,7 @@ const Map: React.FC = () => {
             <p>{detailDataResult.description}</p>
             <HashtagConatiner>
               {detailDataResult.hashtag.map((tag) => (
-                <div>{tag}</div>
+                <div key={tag}>{tag}</div>
               ))}
             </HashtagConatiner>
             <div className="preview">
@@ -359,10 +359,10 @@ const Menu = ({
                 }
               >
                 <CardBody>
-                  <p>
-                    {menu.menuName}
-                    {menu.subscribed && <span>구독중</span>}
-                  </p>
+                  <p>{menu.menuName}</p>
+                  {menu.subscribed && (
+                    <span className="subscribe-badge">구독중</span>
+                  )}
                 </CardBody>
               </Card>
             )
