@@ -11,6 +11,7 @@ import {
   FieldRenderProps,
   FieldWrapper,
 } from "@progress/kendo-react-form";
+import { Upload, UploadFileInfo, UploadOnAddEvent, UploadOnProgressEvent, UploadOnRemoveEvent, UploadOnStatusChangeEvent } from "@progress/kendo-react-upload";
 import { Label, Error, Hint } from "@progress/kendo-react-labels";
 import { GridCellProps, GridFilterCellProps } from "@progress/kendo-react-grid";
 import { DatePicker } from "@progress/kendo-react-dateinputs";
@@ -456,29 +457,69 @@ export const FormInput = (fieldRenderProps: FieldRenderProps) => {
   );
 };
 
-export const FormFile = (fieldRenderProps: FieldRenderProps) => {
-  const { validationMessage, visited, label, id, valid, ...others } =
-    fieldRenderProps;
+const fileStatuses = [
+  "UploadFailed",
+  "Initial",
+  "Selected",
+  "Uploading",
+  "Uploaded",
+  "RemoveFailed",
+  "Removing",
+];
+
+export const FormUpload = (fieldRenderProps: FieldRenderProps) => {
+  const {
+    value,
+    id,
+    optional,
+    label,
+    hint,
+    validationMessage,
+    touched,
+    ...others
+  } = fieldRenderProps;
+
+  const showValidationMessage: string | false | null =
+    touched && validationMessage;
+  const showHint: boolean = !showValidationMessage && hint;
+  const hintId: string = showHint ? `${id}_hint` : "";
+  const errorId: string = showValidationMessage ? `${id}_error` : "";
+  const labelId: string = label ? `${id}_label` : "";
+  const [affectedFiles, setAffectedFiles] = React.useState<UploadFileInfo>();
+  const [files, setFiles] = React.useState<Array<UploadFileInfo>>([]);
+  React.useEffect(() => {
+        if (affectedFiles && affectedFiles.getRawFile) {
+          fieldRenderProps.onChange({ value: affectedFiles.getRawFile() });
+        }
+  }, [affectedFiles]);
+
+  const onAdd = (event: UploadOnAddEvent) => {
+    setFiles(event.newState);
+    setAffectedFiles(event.affectedFiles[0]);
+  };
+
+  const onRemove = (event: UploadOnRemoveEvent) => {
+    setFiles(event.newState);
+    setAffectedFiles(event.affectedFiles[0]);
+  };
 
   return (
     <FieldWrapper>
-      <Label editorId={id} editorValid={valid}>
+      <Label id={labelId} editorId={id} optional={optional}>
         {label}
       </Label>
-      <div
-        className={"k-form-field-wrap"}
-        style={{
-          display: "grid",
-          gridTemplateColumns: "4fr 1fr",
-        }}
-      >
-        <Input valid={valid} id={id} {...others} />
-        <Button
-          icon="upload"
-          fillMode={"outline"}
-          themeColor={"primary"}
-        ></Button>
-      </div>
+      <Upload
+        id={id}
+        autoUpload={false}
+        showActionButtons={false}
+        multiple={false}
+        files={files}
+        onAdd={onAdd}
+        onRemove={onRemove}
+        ariaDescribedBy={`${hintId} ${errorId}`}
+        ariaLabelledBy={labelId}
+        {...others}
+      />
     </FieldWrapper>
   );
 };

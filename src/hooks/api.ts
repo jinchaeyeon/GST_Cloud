@@ -116,7 +116,7 @@ export const useApi = () => {
           responseType: "stream",
           accept: "*/*",
         };
-      if (name === "file-list")
+      if (name === "file-list"|| name === "sign-up" || name === "user-approval-request")
         headers = { "Content-Type": "multipart/form-data", accept: "*/*" };
 
       if (name === "platform-procedure" || name === "platform-query")

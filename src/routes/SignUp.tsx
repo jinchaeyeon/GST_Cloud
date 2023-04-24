@@ -6,30 +6,29 @@ import {
   FieldRenderProps,
   FieldWrapper,
 } from "@progress/kendo-react-form";
+import { isLoading } from "../store/atoms";
 import { Checkbox, Input } from "@progress/kendo-react-inputs";
 import { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { menusState, tokenState } from "../store/atoms";
 import { useApi } from "../hooks/api";
-import { useRecoilState } from "recoil";
-import { FormFile, FormInput } from "../components/Editors";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { FormInput, FormUpload } from "../components/Editors";
 import { AppName, FieldWrap, UserFormBox } from "../CommonStyled";
 import {
-  Label,
   Error,
   Hint,
-  FloatingLabel,
 } from "@progress/kendo-react-labels";
 
 interface FormData {
-  //companyCode: string;
   userId: string;
   password: string;
 }
 const Login: React.FC = () => {
   const [token, setToken] = useRecoilState(tokenState);
   const [menus, setMenus] = useRecoilState(menusState);
-  //const [api, setApi] = useRecoilState(apiState);
+  const setShowLoading = useSetRecoilState(isLoading);
+  // const [bizyn, setBizyn] = useState<boolean>(false);
   const history = useHistory();
   const processApi = useApi();
 
@@ -42,40 +41,94 @@ const Login: React.FC = () => {
       try {
         let para = Object.assign({}, formData);
 
-        //const md5 = require("md5");
-        //para.password = sha256(md5(para.password));
+        if (
+          para.UserName == undefined ||
+          para.UserId == undefined ||
+          para.Password == undefined ||
+          para.PasswordConfirm == undefined ||
+          para.Email == undefined
+        ) {
+          alert("사용자 정보를 입력해주세요.");
+        } else if (para.Password !== para.PasswordConfirm) {
+          alert("비밀번호가 맞지 않습니다.");
+        } else if (
+          para.PhoneNumber.length != 11 ||
+          isNaN(para.PhoneNumber) == true
+        ) {
+          alert("휴대폰번호의 형식을 확인해주세요.");
+        } else {
+          if (
+            para.CompanyName == undefined &&
+            para.BusinessNumber == undefined &&
+            para.BusinessOwner == undefined &&
+            para.BusinessAddress == undefined &&
+            para.BusinessType == undefined &&
+            para.BusinessLicense == undefined &&
+            para.BusinessCard == undefined
+          ) {
+            if (para.User_yn == true) {
+              setShowLoading(true);
+              const response = await processApi<any>("sign-up", para);
 
-        //setShowLoading(true);
-        const response = await processApi<any>("login", para);
+              history.replace("/ServiceDashboard");
+            } else {
+              alert("개인정보 이용 동의를 해주세요.");
+            }
+          } else {
+            if (para.Bus_yn == true) {
+              //&& para.Bus_OK_yn == true
+              setShowLoading(true);
+              if(para.BusinessLicense != undefined) {
+                var fileReader = new FileReader();
+                fileReader.readAsDataURL(para.BusinessLicense);
+                fileReader.onload = function(e) { 
+                  if(e.target != null) {
+                    para.BusinessLicense = e.target.result?.toString().split(",")[1];
+                  }
+                }
+              }
+              setShowLoading(false);
+              if(para.BusinessCard != undefined) {
+                var fileReader = new FileReader();
+                fileReader.readAsDataURL(para.BusinessCard);
+                fileReader.onload = function(e) { 
+                  if(e.target != null) {
+                    para.BusinessCard = e.target.result?.toString().split(",")[1];
+                  }
+                }
+              }
+              const response = await processApi<any>("sign-up", para);
 
-        const {
-          token,
-          userId,
-          userName,
-          role,
-          companyCode,
-          serviceName,
-          customerName,
-          loginKey,
-        } = response;
+              // const userPara = {
+              //   CompanyName: para.CompanyName,
+              //   BusinessType: para.BusinessType,
+              //   BusinessNumber: para.BusinessNumber,
+              //   BusinessLicense: para.BusinessLicense,
+              //   BusinessOwner: para.BusinessOwner,
+              //   BusinessAddress: para.BusinessAddress,
+              // }
 
-        setToken({
-          token,
-          langCode: formData.langCode,
-          userId,
-          userName,
-          role,
-          companyCode,
-          serviceName,
-          customerName,
-          loginKey,
-        });
+              // if(userPara.BusinessLicense != undefined) {
+              //   var fileReader = new FileReader();
+              //   fileReader.readAsDataURL(userPara.BusinessLicense);
+              //   fileReader.onload = function(e) { 
+              //     if(e.target != null) {
+              //       userPara.BusinessLicense = e.target.result?.toString().split(",")[1];
+              //     }
+              //   }
+              // }
 
-        history.replace("/ServiceDashboard");
+              // const response2 = await processApi<any>("user-approval-request", userPara);
+              history.replace("/ServiceDashboard");
 
-        //setShowLoading(false);
+              setShowLoading(false);
+            } else {
+              alert("기업정보 이용 동의를 해주세요.");
+            }
+          }
+        }
       } catch (e: any) {
-        console.log("login error", e);
+        console.log("Sign-up error", e);
         //setShowLoading(false);
         alert(e.message);
       }
@@ -151,11 +204,10 @@ const Login: React.FC = () => {
             </FieldWrap>
             <div className="term-checkbox-container">
               <Field
-                id={"terms"}
-                name={"terms"}
+                id={"User_yn"}
+                name={"User_yn"}
                 label={"개인정보 이용 동의"}
                 component={FormCheckbox}
-                // validator={termsValidator}
               />
             </div>
             <hr />
@@ -188,27 +240,7 @@ const Login: React.FC = () => {
                 validator={emailValidator}
               />
             </FieldWrap>
-            <FieldWrap fieldWidth="50%">
-              <Field
-                name={"BusinessLicense"}
-                label={"사업자등록증"}
-                component={FormFile}
-                validator={emailValidator}
-              />
-              <Field
-                name={"BusinessCard"}
-                label={"명함"}
-                component={FormFile}
-                validator={emailValidator}
-              />
-            </FieldWrap>
             <FieldWrap fieldWidth="100%">
-              {/* <Field
-                name={"userId"}
-                label={"재직증명서"}
-                component={FormFile}
-                validator={emailValidator}
-              /> */}
               <Field
                 name={"BusinessType"}
                 label={"업종"}
@@ -216,21 +248,43 @@ const Login: React.FC = () => {
                 validator={emailValidator}
               />
             </FieldWrap>
+            <FieldWrap fieldWidth="100%">
+              <Field
+                name={"BusinessLicense"}
+                label={"사업자등록증"}
+                component={FormUpload}
+                validator={emailValidator}
+              />
+            </FieldWrap>
+            <FieldWrap fieldWidth="100%">
+              <Field
+                name={"BusinessCard"}
+                label={"명함"}
+                component={FormUpload}
+                validator={emailValidator}
+              />
+            </FieldWrap>
             <div className="term-checkbox-container">
               <Field
-                id={"terms"}
-                name={"terms"}
+                id={"Bus_yn"}
+                name={"Bus_yn"}
                 label={"기업정보 이용 동의"}
                 component={FormCheckbox}
-                // validator={termsValidator}
               />
-              <Field
-                id={"terms"}
-                name={"terms"}
+              {/* {bizyn == true ? ( <Field
+                id={"Bus_OK_yn"}
+                name={"Bus_OK_yn"}
                 label={"기업 승인 요청"}
                 component={FormCheckbox}
                 // validator={termsValidator}
-              />
+              />) : ( <Field
+                id={"Bus_OK_yn"}
+                name={"Bus_OK_yn"}
+                label={"기업 승인 요청"}
+                component={FormCheckbox}
+                disabled={true}
+                // validator={termsValidator}
+              />)} */}
             </div>
             <Button className="sign-up-btn" themeColor={"primary"}>
               회원가입
