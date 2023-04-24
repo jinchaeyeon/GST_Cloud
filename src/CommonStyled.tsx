@@ -91,6 +91,8 @@ export const AppName = styled.h1`
   =========================================================================*/
   @media (max-width: 768px) {
     border: none;
+    background-position: center;
+    padding-left: 0;
   }
 `;
 
@@ -494,6 +496,22 @@ export const FieldWrap = styled.div<TFieldWrap>`
   .readonly {
     background-color: #efefef;
   }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    > .k-form-field {
+      width: 100%;
+    }
+    .k-form-field > .k-label,
+    .k-form-field > kendo-label,
+    .k-form-field > .k-form-label {
+      width: 20% !important;
+    }
+    .k-form-field-wrap {
+      max-width: calc(80% - 10px) !important;
+    }
+  }
 `;
 
 export const LoginBox = styled.div`
@@ -528,6 +546,9 @@ export const LoginBox = styled.div`
 `;
 
 export const UserFormBox = styled(LoginBox)`
+  height: auto;
+  padding-bottom: 0;
+
   form {
     width: 700px;
     background-color: #fff;

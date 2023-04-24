@@ -90,7 +90,7 @@ const Login: React.FC = () => {
           <FormElement horizontal={true}>
             <AppName
               style={{
-                backgroundPosition: "45px",
+                backgroundPosition: "30px",
                 paddingLeft: "70px",
               }}
             >
