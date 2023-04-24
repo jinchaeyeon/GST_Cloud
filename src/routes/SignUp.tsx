@@ -24,7 +24,7 @@ interface FormData {
   userId: string;
   password: string;
 }
-const Login: React.FC = () => {
+const SignUp: React.FC = () => {
   const [token, setToken] = useRecoilState(tokenState);
   const [menus, setMenus] = useRecoilState(menusState);
   const setShowLoading = useSetRecoilState(isLoading);
@@ -40,7 +40,7 @@ const Login: React.FC = () => {
     async (formData: { [name: string]: any }) => {
       try {
         let para = Object.assign({}, formData);
-
+        let data: any;
         if (
           para.UserName == undefined ||
           para.UserId == undefined ||
@@ -51,11 +51,6 @@ const Login: React.FC = () => {
           alert("사용자 정보를 입력해주세요.");
         } else if (para.Password !== para.PasswordConfirm) {
           alert("비밀번호가 맞지 않습니다.");
-        } else if (
-          para.PhoneNumber.length != 11 ||
-          isNaN(para.PhoneNumber) == true
-        ) {
-          alert("휴대폰번호의 형식을 확인해주세요.");
         } else {
           if (
             para.CompanyName == undefined &&
@@ -68,8 +63,15 @@ const Login: React.FC = () => {
           ) {
             if (para.User_yn == true) {
               setShowLoading(true);
-              const response = await processApi<any>("sign-up", para);
-
+              try {
+                data = await processApi<any>("sign-up", para);
+              } catch (error) {
+                data = null;
+              }
+              
+              if(data != null) {
+                alert("회원가입이 완료되었습니다.")
+              }
               history.replace("/ServiceDashboard");
             } else {
               alert("개인정보 이용 동의를 해주세요.");
@@ -97,8 +99,15 @@ const Login: React.FC = () => {
                   }
                 }
               }
-              const response = await processApi<any>("sign-up", para);
-
+              try {
+                data = await processApi<any>("sign-up", para);
+              } catch (error) {
+                data = null;
+              }
+              
+              if(data != null) {
+                alert("회원가입이 완료되었습니다.")
+              }
               // const userPara = {
               //   CompanyName: para.CompanyName,
               //   BusinessType: para.BusinessType,
@@ -119,7 +128,7 @@ const Login: React.FC = () => {
               // }
 
               // const response2 = await processApi<any>("user-approval-request", userPara);
-              history.replace("/ServiceDashboard");
+              // history.replace("/ServiceDashboard");
 
               setShowLoading(false);
             } else {
@@ -295,7 +304,7 @@ const Login: React.FC = () => {
     </UserFormBox>
   );
 };
-export default Login;
+export default SignUp;
 
 const FormCheckbox = (fieldRenderProps: FieldRenderProps) => {
   const {

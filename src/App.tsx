@@ -10,6 +10,7 @@ import { isMenuOpendState } from "./store/atoms";
 import ServiceStore from "./routes/ServiceStore";
 import ServiceDashboard from "./routes/ServiceDashboard";
 import SignUp from "./routes/SignUp";
+import MyPage from "./routes/MyPage";
 import "./index.scss";
 
 type TGlobalStyle = {
@@ -159,6 +160,7 @@ const AppInner: React.FC = () => {
           <Route path="/SignUp" component={SignUp} exact />
           <Route path="/" component={Login} exact />
           <PanelBarNavContainer>
+            <AuthRoute path="/MyPage" component={MyPage} exact />
             <AuthRoute path="/ServiceStore" component={ServiceStore} exact />
             <AuthRoute
               path="/ServiceDashboard"

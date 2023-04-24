@@ -12,7 +12,7 @@ const domain: any = {
   "sign-up": { action: "post", url: "c/sign-up" },
   //사용자정보 조회/수정/탈퇴
   "user-info-view": { action: "get", url: "c/user/info" },
-  "user-info-save": { action: "post", url: "c/user/info" },
+  "user-info-save": { action: "put", url: "c/user/info" },
   "user-info-delete": { action: "delete", url: "c/user/info" },
   //승인 요청
   "user-approval-request": { action: "post", url: "c/user/approval-request" },

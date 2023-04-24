@@ -88,6 +88,12 @@ const PanelBarNavContainer = (props: any) => {
     setIsMenuOpend((prev) => !prev);
   };
 
+  const onMyPageClick = () => {
+    const link = window.location.href.split("/")[0]+"/"+window.location.href.split("/")[1]+"/"+window.location.href.split("/")[2]+"/MyPage";
+    window.location.href = link;
+  };
+
+
   return (
     <Wrapper isMenuOpend={isMenuOpend}>
       <Modal isMenuOpend={isMenuOpend} onClick={onMenuBtnClick} />
@@ -145,7 +151,7 @@ const PanelBarNavContainer = (props: any) => {
           />
         </TopTitle>
         <TopInfo>
-          <p>
+          <p style={{cursor: "pointer"}} onClick={onMyPageClick}>
             <span className="k-icon k-i-user"></span>
             {userName}({userId})
           </p>
