@@ -96,12 +96,7 @@ const Login: React.FC = () => {
             >
               GST Cloud Store
             </AppName>
-            <Field
-              name={"userId"}
-              label={"ID"}
-              component={FormInput}
-              validator={emailValidator}
-            />
+            <Field name={"userId"} label={"ID"} component={FormInput} />
             <Field
               name={"password"}
               label={"PASSWORD"}

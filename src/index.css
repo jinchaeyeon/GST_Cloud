@@ -31,6 +31,7 @@ div.k-animation-container {
 .k-form-horizontal .k-form-field-wrap {
   max-width: calc(60% - 10px) !important;
 }
+/* 한줄에 두개 들어간 필드와 비율 맞추기 */
 .k-form-horizontal .full-form-field .k-form-field > .k-label,
 .k-form-horizontal .full-form-field .k-form-field > kendo-label,
 .k-form-horizontal .full-form-field .k-form-field > .k-form-label {
