@@ -31,6 +31,14 @@ div.k-animation-container {
 .k-form-horizontal .k-form-field-wrap {
   max-width: calc(60% - 10px) !important;
 }
+.k-form-horizontal .full-form-field .k-form-field > .k-label,
+.k-form-horizontal .full-form-field .k-form-field > kendo-label,
+.k-form-horizontal .full-form-field .k-form-field > .k-form-label {
+  width: 20% !important;
+}
+.k-form-horizontal .full-form-field .k-form-field-wrap {
+  max-width: calc(80% - 10px) !important;
+}
 
 /* 스케줄러 이벤트 팝업창 반복 여부 숨기기 */
 .k-form.k-scheduler-edit-form > .k-form-field:nth-child(5) {

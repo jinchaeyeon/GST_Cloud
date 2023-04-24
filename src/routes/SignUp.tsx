@@ -15,10 +15,7 @@ import { useApi } from "../hooks/api";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { FormInput, FormUpload } from "../components/Editors";
 import { AppName, FieldWrap, UserFormBox } from "../CommonStyled";
-import {
-  Error,
-  Hint,
-} from "@progress/kendo-react-labels";
+import { Error, Hint } from "@progress/kendo-react-labels";
 
 interface FormData {
   userId: string;
@@ -78,24 +75,28 @@ const Login: React.FC = () => {
             if (para.Bus_yn == true) {
               //&& para.Bus_OK_yn == true
               setShowLoading(true);
-              if(para.BusinessLicense != undefined) {
+              if (para.BusinessLicense != undefined) {
                 var fileReader = new FileReader();
                 fileReader.readAsDataURL(para.BusinessLicense);
-                fileReader.onload = function(e) { 
-                  if(e.target != null) {
-                    para.BusinessLicense = e.target.result?.toString().split(",")[1];
+                fileReader.onload = function (e) {
+                  if (e.target != null) {
+                    para.BusinessLicense = e.target.result
+                      ?.toString()
+                      .split(",")[1];
                   }
-                }
+                };
               }
               setShowLoading(false);
-              if(para.BusinessCard != undefined) {
+              if (para.BusinessCard != undefined) {
                 var fileReader = new FileReader();
                 fileReader.readAsDataURL(para.BusinessCard);
-                fileReader.onload = function(e) { 
-                  if(e.target != null) {
-                    para.BusinessCard = e.target.result?.toString().split(",")[1];
+                fileReader.onload = function (e) {
+                  if (e.target != null) {
+                    para.BusinessCard = e.target.result
+                      ?.toString()
+                      .split(",")[1];
                   }
-                }
+                };
               }
               const response = await processApi<any>("sign-up", para);
 
@@ -111,7 +112,7 @@ const Login: React.FC = () => {
               // if(userPara.BusinessLicense != undefined) {
               //   var fileReader = new FileReader();
               //   fileReader.readAsDataURL(userPara.BusinessLicense);
-              //   fileReader.onload = function(e) { 
+              //   fileReader.onload = function(e) {
               //     if(e.target != null) {
               //       userPara.BusinessLicense = e.target.result?.toString().split(",")[1];
               //     }
@@ -240,7 +241,7 @@ const Login: React.FC = () => {
                 validator={emailValidator}
               />
             </FieldWrap>
-            <FieldWrap fieldWidth="100%">
+            <FieldWrap fieldWidth="100%" className="full-form-field">
               <Field
                 name={"BusinessType"}
                 label={"업종"}
@@ -248,7 +249,7 @@ const Login: React.FC = () => {
                 validator={emailValidator}
               />
             </FieldWrap>
-            <FieldWrap fieldWidth="100%">
+            <FieldWrap fieldWidth="100%" className="full-form-field">
               <Field
                 name={"BusinessLicense"}
                 label={"사업자등록증"}
@@ -256,7 +257,7 @@ const Login: React.FC = () => {
                 validator={emailValidator}
               />
             </FieldWrap>
-            <FieldWrap fieldWidth="100%">
+            <FieldWrap fieldWidth="100%" className="full-form-field">
               <Field
                 name={"BusinessCard"}
                 label={"명함"}
