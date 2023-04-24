@@ -129,7 +129,7 @@ const SignUp: React.FC = () => {
               // }
 
               // const response2 = await processApi<any>("user-approval-request", userPara);
-              // history.replace("/ServiceDashboard");
+              history.replace("/ServiceDashboard");
 
               setShowLoading(false);
             } else {

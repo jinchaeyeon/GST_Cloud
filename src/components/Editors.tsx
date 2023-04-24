@@ -36,6 +36,7 @@ import { useApi } from "../hooks/api";
 import { FORM_DATA_INDEX } from "./CommonString";
 import { bytesToBase64 } from "byte-base64";
 import { Button } from "@progress/kendo-react-buttons";
+import ImageWindow from "./Windows/CommonWindows/ImageWindow";
 
 /*  Form 내에서 사용되는 컴포넌트들을 저장하는 페이지   */
 
@@ -494,11 +495,56 @@ export const FormUpload = (fieldRenderProps: FieldRenderProps) => {
   const labelId: string = label ? `${id}_label` : "";
   const [affectedFiles, setAffectedFiles] = React.useState<UploadFileInfo>();
   const [files, setFiles] = React.useState<Array<UploadFileInfo>>([]);
+  const [imageWindowVisible, setImageWindowVisible] = useState<boolean>(false);
+
+  React.useEffect(() => {
+    if(fieldRenderProps.value != "" && fieldRenderProps.value != undefined) {
+      const contentType = 'image/jpeg';
+      
+      const blob = b64toBlob(fieldRenderProps.value, contentType);
+      var file = new File([blob], fieldRenderProps.label, {type: contentType});
+      
+      const files = {
+        extension: ".jpeg",
+        name: `${fieldRenderProps.label}.jpeg`,
+        progress: 0,
+        size: blob.size,
+        status: 2,
+        uid: ""
+      }
+      setFiles([files]);
+    }
+  }, []);
+
+  const b64toBlob = (b64Data: string, contentType='', sliceSize=512) => {
+    const byteCharacters = b64Data;
+    const byteArrays = [];
+  
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+  
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+  
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+  
+    const blob = new Blob(byteArrays, {type: contentType});
+    return blob;
+  }
+
   React.useEffect(() => {
     if (affectedFiles && affectedFiles.getRawFile) {
       fieldRenderProps.onChange({ value: affectedFiles.getRawFile() });
     }
   }, [affectedFiles]);
+
+  const onImageWnkClick = () => {
+    setImageWindowVisible(true);
+  }
 
   const onAdd = (event: UploadOnAddEvent) => {
     setFiles(event.newState);
@@ -511,6 +557,7 @@ export const FormUpload = (fieldRenderProps: FieldRenderProps) => {
   };
 
   return (
+    <>
     <FieldWrapper>
       <Label id={labelId} editorId={id} optional={optional}>
         {label}
@@ -532,20 +579,31 @@ export const FormUpload = (fieldRenderProps: FieldRenderProps) => {
           onRemove={onRemove}
           ariaDescribedBy={`${hintId} ${errorId}`}
           ariaLabelledBy={labelId}
+          restrictions={{
+            allowedExtensions: [".jpg", ".png"],
+          }}
           {...others}
         />
         <Button
           icon="image"
+          type="button"
           themeColor={"primary"}
           size={"small"}
           fillMode={"outline"}
           style={{ marginTop: "10px" }}
-          disabled={true}
+          onClick={onImageWnkClick}
         >
           미리보기
         </Button>
       </div>
+      {imageWindowVisible && (
+        <ImageWindow
+          setVisible={setImageWindowVisible}
+          url={fieldRenderProps.value}
+        />
+      )}
     </FieldWrapper>
+    </>
   );
 };
 

@@ -324,6 +324,7 @@ const MyPage: React.FC = () => {
                 name={"BusinessType"}
                 label={"업종"}
                 component={FormInput}
+                className="full-form-field"
               />
             </FieldWrap>
             <FieldWrap fieldWidth="100%">
@@ -331,6 +332,7 @@ const MyPage: React.FC = () => {
                 name={"BusinessLicense"}
                 label={"사업자등록증"}
                 component={FormUpload}
+                className="full-form-field"
               />
             </FieldWrap>
             <FieldWrap fieldWidth="100%">
@@ -338,6 +340,7 @@ const MyPage: React.FC = () => {
                 name={"BusinessCard"}
                 label={"명함"}
                 component={FormUpload}
+                className="full-form-field"
               />
             </FieldWrap>
             <Button className="sign-up-btn" themeColor={"primary"}>
