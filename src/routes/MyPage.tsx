@@ -193,7 +193,7 @@ const MyPage: React.FC = () => {
     fetchUser();
   }, []);
 
-  const onDeleteUser = async() => {
+  const onDeleteUser = async () => {
     if (!window.confirm("회원 탈퇴하시겠습니까?")) {
       return false;
     }
@@ -201,7 +201,7 @@ const MyPage: React.FC = () => {
     setToken(null as any);
     setMenus(null as any);
     history.replace("/ServiceDashboard");
-  }
+  };
 
   const emailValidator = (value: string) =>
     value !== "" ? "" : "Please enter a valid email.";
@@ -319,28 +319,25 @@ const MyPage: React.FC = () => {
                 component={FormInput}
               />
             </FieldWrap>
-            <FieldWrap fieldWidth="100%">
+            <FieldWrap fieldWidth="100%" className="full-form-field">
               <Field
                 name={"BusinessType"}
                 label={"업종"}
                 component={FormInput}
-                className="full-form-field"
               />
             </FieldWrap>
-            <FieldWrap fieldWidth="100%">
+            <FieldWrap fieldWidth="100%" className="full-form-field">
               <Field
                 name={"BusinessLicense"}
                 label={"사업자등록증"}
                 component={FormUpload}
-                className="full-form-field"
               />
             </FieldWrap>
-            <FieldWrap fieldWidth="100%">
+            <FieldWrap fieldWidth="100%" className="full-form-field">
               <Field
                 name={"BusinessCard"}
                 label={"명함"}
                 component={FormUpload}
-                className="full-form-field"
               />
             </FieldWrap>
             <Button className="sign-up-btn" themeColor={"primary"}>
@@ -352,7 +349,7 @@ const MyPage: React.FC = () => {
               themeColor={"info"}
               fillMode="outline"
               onClick={onDeleteUser}
-              style={{width: "100%", marginTop: "20px", height: "50px"}}
+              style={{ width: "100%", marginTop: "20px", height: "50px" }}
             >
               회원 탈퇴
             </Button>
