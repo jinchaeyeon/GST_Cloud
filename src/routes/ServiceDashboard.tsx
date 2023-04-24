@@ -41,6 +41,15 @@ import CenterCell from "../components/Cells/CenterCell";
 
 //그리드 별 키 필드값
 const DATA_ITEM_KEY = "service_name";
+type TMainDataResult = {
+  category: string;
+  formId: string;
+  menuId: string;
+  menuName: string;
+  parentMenuId: string;
+  parentMenuName: string;
+  subscribed: boolean;
+};
 
 const Service: React.FC = () => {
   //그리드 데이터 결과값
@@ -149,10 +158,7 @@ const Service: React.FC = () => {
     sort: [],
   });
 
-  //그리드 데이터 결과값
-  const [mainDataResult, setMainDataResult] = useState<DataResult>(
-    process([], mainDataState)
-  );
+  const [mainDataResult, setMainDataResult] = useState<TMainDataResult[]>([]);
   const [mainDataResult2, setMainDataResult2] = useState<DataResult>(
     process(
       [
@@ -178,36 +184,23 @@ const Service: React.FC = () => {
     let data: any;
     setLoading(true);
     try {
-      data = await processApi<any>("db-usage");
+      data = await processApi<any>("menus-view");
     } catch (error) {
       data = null;
     }
 
     if (data !== null) {
-      const totalRowCnt = data.RowCount;
-      const rows = data.Rows;
+      const rows = data.allMenu.filter(
+        (menu: TMainDataResult) => menu.menuName !== "PlusWin6"
+      );
 
-      if (totalRowCnt > 0)
-        setMainDataResult((prev) => {
-          return {
-            data: [...prev.data, ...rows],
-            total: totalRowCnt,
-          };
-        });
+      setMainDataResult(rows);
     } else {
       console.log("[에러발생]");
       console.log(data);
     }
     setLoading(false);
   };
-
-  //메인 그리드 데이터 변경 되었을 때
-  useEffect(() => {
-    if (mainDataResult.total > 0) {
-      const firstRowData = mainDataResult.data[0];
-      setSelectedState({ [firstRowData[DATA_ITEM_KEY]]: true });
-    }
-  }, [mainDataResult]);
 
   useEffect(() => {
     fetchMainData();
@@ -232,14 +225,14 @@ const Service: React.FC = () => {
     setMainDataState(event.dataState);
   };
 
-  //그리드 푸터
-  const mainTotalFooterCell = (props: GridFooterCellProps) => {
-    return (
-      <td colSpan={props.colSpan} style={props.style}>
-        총 {mainDataResult.total}건
-      </td>
-    );
-  };
+  // //그리드 푸터
+  // const mainTotalFooterCell = (props: GridFooterCellProps) => {
+  //   return (
+  //     <td colSpan={props.colSpan} style={props.style}>
+  //       총 {mainDataResult.total}건
+  //     </td>
+  //   );
+  // };
 
   //그리드 정렬 이벤트
   const onMainSortChange = (e: any) => {
@@ -251,6 +244,22 @@ const Service: React.FC = () => {
   };
 
   const categories = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
+
+  const list = (id: string) => {
+    let data: any = [];
+
+    mainDataResult.map((datas) => {
+      if (
+        datas.category !== "GROUP" &&
+        datas.subscribed == true &&
+        datas.parentMenuId == id
+      ) {
+        data.push(datas);
+      }
+    });
+
+    return data;
+  };
   return (
     <>
       <TitleContainer>
@@ -261,12 +270,17 @@ const Service: React.FC = () => {
         <GridContainer style={{ height: "85vh" }} width="45%">
           <GridTitle>이용중인 메뉴</GridTitle>
           <UsedMenusBox>
-            <UsedMenus title="영업관리" mainDataResult={mainDataResult1} />
-            <UsedMenus title="물류관리" mainDataResult={mainDataResult4} />
-            <UsedMenus title="인사관리" mainDataResult={mainDataResult3} />
-            <UsedMenus title="회계관리" mainDataResult={mainDataResult5} />
-            <UsedMenus title="시스템" mainDataResult={mainDataResult6} />
-            <UsedMenus title="전사관리" mainDataResult={mainDataResult7} />
+            {mainDataResult &&
+              mainDataResult.map(
+                (data) =>
+                  data.category === "GROUP" &&
+                  data.subscribed == true && (
+                    <UsedMenus
+                      title={data.menuName}
+                      mainDataResult={list(data.menuId)}
+                    />
+                  )
+              )}
           </UsedMenusBox>
         </GridContainer>
         <GridContainer
@@ -422,7 +436,7 @@ const Service: React.FC = () => {
                   field="month"
                   title="월"
                   width="80"
-                  footerCell={mainTotalFooterCell}
+                  // footerCell={mainTotalFooterCell}
                 />
                 <GridColumn field="user" title="사용자" width="150" />
                 <GridColumn
@@ -454,7 +468,16 @@ const UsedMenus = ({ title, mainDataResult }: any) => {
       <p className="title">{title}</p>
       <UsedMenuBox>
         {mainDataResult.map((row: any, idx: number) => (
-          <p key={idx}>{row.name}</p>
+          <p
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+            key={idx}
+          >
+            {row.menuName}
+          </p>
         ))}
       </UsedMenuBox>
     </div>

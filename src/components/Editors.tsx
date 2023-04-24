@@ -494,45 +494,49 @@ export const FormUpload = (fieldRenderProps: FieldRenderProps) => {
   const [affectedFiles, setAffectedFiles] = React.useState<UploadFileInfo>();
   const [files, setFiles] = React.useState<Array<UploadFileInfo>>([]);
   const [imageWindowVisible, setImageWindowVisible] = useState<boolean>(false);
+  const [state, setState] = useState<boolean>(false);
 
   React.useEffect(() => {
-    if(fieldRenderProps.value != "" && fieldRenderProps.value != undefined) {
-      const contentType = 'image/jpeg';
-      
+    if (fieldRenderProps.value != "" && fieldRenderProps.value != undefined) {
+      const contentType = "image/jpeg";
+
       const blob = b64toBlob(fieldRenderProps.value, contentType);
-      var file = new File([blob], fieldRenderProps.label, {type: contentType});
-      
+      var file = new File([blob], fieldRenderProps.label, {
+        type: contentType,
+      });
+
       const files = {
         extension: ".jpeg",
         name: `${fieldRenderProps.label}.jpeg`,
         progress: 0,
         size: blob.size,
         status: 2,
-        uid: ""
-      }
+        uid: "",
+      };
       setFiles([files]);
+      setState(true);
     }
   }, []);
 
-  const b64toBlob = (b64Data: string, contentType='', sliceSize=512) => {
+  const b64toBlob = (b64Data: string, contentType = "", sliceSize = 512) => {
     const byteCharacters = b64Data;
     const byteArrays = [];
-  
+
     for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
       const slice = byteCharacters.slice(offset, offset + sliceSize);
-  
+
       const byteNumbers = new Array(slice.length);
       for (let i = 0; i < slice.length; i++) {
         byteNumbers[i] = slice.charCodeAt(i);
       }
-  
+
       const byteArray = new Uint8Array(byteNumbers);
       byteArrays.push(byteArray);
     }
-  
-    const blob = new Blob(byteArrays, {type: contentType});
+
+    const blob = new Blob(byteArrays, { type: contentType });
     return blob;
-  }
+  };
 
   React.useEffect(() => {
     if (affectedFiles && affectedFiles.getRawFile) {
@@ -542,66 +546,72 @@ export const FormUpload = (fieldRenderProps: FieldRenderProps) => {
 
   const onImageWnkClick = () => {
     setImageWindowVisible(true);
-  }
+  };
 
   const onAdd = (event: UploadOnAddEvent) => {
     setFiles(event.newState);
     setAffectedFiles(event.affectedFiles[0]);
+    setState(true);
   };
 
   const onRemove = (event: UploadOnRemoveEvent) => {
     setFiles(event.newState);
     setAffectedFiles(event.affectedFiles[0]);
+    setState(false);
   };
 
   return (
     <>
-    <FieldWrapper>
-      <Label id={labelId} editorId={id} optional={optional}>
-        {label}
-      </Label>
-      <div
-        className={"k-form-field-wrap"}
-        style={{
-          textAlign: "right",
-        }}
-      >
-        <Upload
-          id={id}
-          selectMessageUI={test}
-          autoUpload={false}
-          showActionButtons={false}
-          multiple={false}
-          files={files}
-          onAdd={onAdd}
-          onRemove={onRemove}
-          ariaDescribedBy={`${hintId} ${errorId}`}
-          ariaLabelledBy={labelId}
-          restrictions={{
-            allowedExtensions: [".jpg", ".png"],
-            maxFileSize: 2000000,
+      <FieldWrapper>
+        <Label id={labelId} editorId={id} optional={optional}>
+          {label}
+        </Label>
+        <div
+          className={"k-form-field-wrap"}
+          style={{
+            textAlign: "right",
           }}
-          {...others}
-        />
-        <Button
-          icon="image"
-          type="button"
-          themeColor={"primary"}
-          size={"small"}
-          fillMode={"outline"}
-          style={{ marginTop: "10px" }}
-          onClick={onImageWnkClick}
         >
-          미리보기
-        </Button>
-      </div>
-      {imageWindowVisible && (
-        <ImageWindow
-          setVisible={setImageWindowVisible}
-          url={fieldRenderProps.value}
-        />
-      )}
-    </FieldWrapper>
+          <Upload
+            id={id}
+            selectMessageUI={test}
+            autoUpload={false}
+            showActionButtons={false}
+            multiple={false}
+            files={files}
+            onAdd={onAdd}
+            onRemove={onRemove}
+            ariaDescribedBy={`${hintId} ${errorId}`}
+            ariaLabelledBy={labelId}
+            restrictions={{
+              allowedExtensions: [".jpg", ".png"],
+              maxFileSize: 2000000,
+            }}
+            {...others}
+          />
+          {state == true ? (
+            <Button
+              icon="image"
+              type="button"
+              themeColor={"primary"}
+              size={"small"}
+              fillMode={"outline"}
+              style={{ marginTop: "10px" }}
+              onClick={onImageWnkClick}
+            >
+              미리보기
+            </Button>
+          ) : (
+            ""
+          )}
+        </div>
+        {imageWindowVisible && (
+          <ImageWindow
+            setVisible={setImageWindowVisible}
+            url={fieldRenderProps.value}
+          />
+        )}
+      </FieldWrapper>
     </>
   );
 };
