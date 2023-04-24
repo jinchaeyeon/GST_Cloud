@@ -14,7 +14,6 @@ import {
   TitleContainer,
 } from "../CommonStyled";
 import { Button } from "@progress/kendo-react-buttons";
-import { isNull } from "util";
 import { numberWithCommas } from "../components/CommonFunction";
 import { Input } from "@progress/kendo-react-inputs";
 
@@ -39,6 +38,8 @@ type TDetailDataResult = {
   price: string;
   description: string;
   preview: any;
+  hashtag: string[];
+  manualExists: boolean;
 } | null;
 
 type TSelectedCard = {
@@ -170,6 +171,49 @@ const Map: React.FC = () => {
   ) => {
     return mainDataResult.filter((menu) => menuId === menu.parentMenuId);
   };
+
+  const fetchManualDownload = async () => {
+    let data: any;
+    if (!detailDataResult) {
+      console.log("No detailDataResult for fetchManualDownload");
+      return false;
+    }
+    setLoading(true);
+    const para = {
+      id: `${detailDataResult.formId}_${detailDataResult.menuId}_ko-KR.pdf`,
+    };
+
+    try {
+      data = await processApi<any>("manual-download", para);
+    } catch (error) {
+      data = null;
+    }
+
+    if (data !== null) {
+      const original_name = `${detailDataResult.menuName} 매뉴얼.pdf`;
+      const blob = new Blob([data.data], { type: "application/pdf" });
+
+      // blob을 사용해 객체 URL을 생성합니다.
+      const fileObjectUrl = window.URL.createObjectURL(blob);
+
+      // blob 객체 URL을 설정할 링크를 만듭니다.
+      const link = document.createElement("a");
+      link.href = fileObjectUrl;
+      link.style.display = "none";
+
+      // 다운로드 파일 이름을 지정 할 수 있습니다.
+      link.download = original_name;
+
+      // 링크를 body에 추가하고 강제로 click 이벤트를 발생시켜 파일 다운로드를 실행시킵니다.
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } else {
+      console.log("[에러발생]");
+      console.log(data);
+    }
+    setLoading(false);
+  };
   return (
     <>
       <TitleContainer>
@@ -209,10 +253,9 @@ const Map: React.FC = () => {
             </div>
             <p>{detailDataResult.description}</p>
             <HashtagConatiner>
-              <div>#사출</div>
-              <div>#가공</div>
-              <div>#고도화1</div>
-              <div>#생산</div>
+              {detailDataResult.hashtag.map((tag) => (
+                <div>{tag}</div>
+              ))}
             </HashtagConatiner>
             <div className="preview">
               {detailDataResult.preview ? (
@@ -224,7 +267,13 @@ const Map: React.FC = () => {
                 <div className="k-icon k-i-image"></div>
               )}
             </div>
-            <Button themeColor={"primary"} icon="pdf" fillMode={"outline"}>
+            <Button
+              themeColor={"primary"}
+              icon="pdf"
+              fillMode={"outline"}
+              onClick={fetchManualDownload}
+              disabled={!detailDataResult.manualExists}
+            >
               메뉴얼 보기
             </Button>
           </div>
@@ -254,7 +303,7 @@ const Map: React.FC = () => {
             )}
             {detailDataResult.subscribed ? (
               <Button
-                themeColor={"primary"}
+                themeColor={"info"}
                 fillMode={"outline"}
                 className="important"
                 onClick={fetchUnsubscribe}
