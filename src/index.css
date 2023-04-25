@@ -7,6 +7,14 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* ios 모바일 뷰 디바이스 높이 오류 방지 */
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  /* ios 모바일 뷰 디바이스 높이 오류 방지 - 크롬 적용*/
+  @supports (-webkit-appearance: none) and (stroke-color: transparent) {
+    min-height: -webkit-fill-available;
+  }
 }
 
 code {

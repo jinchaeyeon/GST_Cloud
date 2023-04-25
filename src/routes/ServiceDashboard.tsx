@@ -18,6 +18,7 @@ import {
   DashboardBox,
   UsedMenusBox,
   UsedMenuBox,
+  CssGridContainer,
 } from "../CommonStyled";
 import { useApi } from "../hooks/api";
 import { SELECTED_FIELD, MAIN_COLOR } from "../components/CommonString";
@@ -263,12 +264,7 @@ const Service: React.FC = () => {
             gridTemplateRows: "2fr 1fr 1fr",
           }}
         >
-          <GridContainerWrap
-            style={{
-              display: "grid",
-              gridTemplateColumns: "2fr 1fr ",
-            }}
-          >
+          <CssGridContainer gridTemplateColumns="2fr 1fr">
             <GridContainer>
               <GridTitle>서비스 측정</GridTitle>
               <Chart style={{ height: "calc(100% - 35px)" }}>
@@ -335,13 +331,9 @@ const Service: React.FC = () => {
                 </p>
               </DashboardBox>
             </GridContainer>
-          </GridContainerWrap>
-          <GridContainerWrap
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-            }}
-          >
+          </CssGridContainer>
+
+          <CssGridContainer gridTemplateColumns="repeat(3, 1fr)">
             <GridContainer>
               <GridTitle>사용자 수</GridTitle>
               <DashboardBox>
@@ -402,13 +394,8 @@ const Service: React.FC = () => {
                 </p>
               </DashboardBox>
             </GridContainer>
-          </GridContainerWrap>
-          <GridContainerWrap
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-            }}
-          >
+          </CssGridContainer>
+          <CssGridContainer gridTemplateColumns="repeat(2, 1fr)">
             <GridContainer>
               <GridTitle>모듈별 사용빈도</GridTitle>
               <Chart style={{ height: "calc(100% - 35px)" }}>
@@ -509,7 +496,7 @@ const Service: React.FC = () => {
                 />
               </Grid>
             </GridContainer>
-          </GridContainerWrap>
+          </CssGridContainer>
         </GridContainer>
       </GridContainerWrap>
     </>
