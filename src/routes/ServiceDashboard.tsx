@@ -18,6 +18,7 @@ import {
   DashboardBox,
   UsedMenusBox,
   UsedMenuBox,
+  CssGridContainer,
 } from "../CommonStyled";
 import { useApi } from "../hooks/api";
 import { SELECTED_FIELD, MAIN_COLOR } from "../components/CommonString";
@@ -271,23 +272,32 @@ const Service: React.FC = () => {
           <GridTitle>이용중인 메뉴</GridTitle>
           <UsedMenusBox>
             {mainDataResult &&
-              mainDataResult.filter(
+            mainDataResult.filter(
+              (data) => data.category === "GROUP" && data.subscribed == true
+            ).length == 0 ? (
+              <p
+                style={{
+                  textAlign: "center",
+                  paddingTop: `calc(50% - 35px)`,
+                  fontWeight: "bolder",
+                  color: "gray",
+                }}
+              >
+                구독 중인 메뉴가 없습니다.
+              </p>
+            ) : (
+              mainDataResult &&
+              mainDataResult.map(
                 (data) =>
                   data.category === "GROUP" &&
-                  data.subscribed == true
-              ).length == 0 ? (
-                <p style={{textAlign : "center", paddingTop: `calc(50% - 35px)`, fontWeight: "bolder", color: "gray"}}>구독 중인 메뉴가 없습니다.</p>
-              ) : mainDataResult &&
-                mainDataResult.map(
-                  (data) =>
-                    data.category === "GROUP" &&
-                    data.subscribed == true && (
-                      <UsedMenus
-                        title={data.menuName}
-                        mainDataResult={list(data.menuId)}
-                      />
-                    )
-                )}
+                  data.subscribed == true && (
+                    <UsedMenus
+                      title={data.menuName}
+                      mainDataResult={list(data.menuId)}
+                    />
+                  )
+              )
+            )}
           </UsedMenusBox>
         </GridContainer>
         <GridContainer
@@ -299,12 +309,7 @@ const Service: React.FC = () => {
             gridTemplateRows: "2fr 1fr 1fr",
           }}
         >
-          <GridContainerWrap
-            style={{
-              display: "grid",
-              gridTemplateColumns: "2fr 1fr ",
-            }}
-          >
+          <CssGridContainer gridTemplateColumns="2fr 1fr">
             <GridContainer>
               <GridTitle>서비스 측정</GridTitle>
               <Chart style={{ height: "calc(100% - 35px)" }}>
@@ -343,13 +348,9 @@ const Service: React.FC = () => {
                 </p>
               </DashboardBox>
             </GridContainer>
-          </GridContainerWrap>
-          <GridContainerWrap
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-            }}
-          >
+          </CssGridContainer>
+
+          <CssGridContainer gridTemplateColumns="repeat(3, 1fr)">
             <GridContainer>
               <GridTitle>사용자 수</GridTitle>
               <DashboardBox>
@@ -377,13 +378,8 @@ const Service: React.FC = () => {
                 </p>
               </DashboardBox>
             </GridContainer>
-          </GridContainerWrap>
-          <GridContainerWrap
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-            }}
-          >
+          </CssGridContainer>
+          <CssGridContainer gridTemplateColumns="repeat(2, 1fr)">
             <GridContainer>
               <GridTitle>모듈별 사용빈도</GridTitle>
               <Chart style={{ height: "calc(100% - 35px)" }}>
@@ -442,25 +438,29 @@ const Service: React.FC = () => {
                 <GridColumn
                   field="month"
                   title="월"
-                  width="80"
+                  width="50px"
                   // footerCell={mainTotalFooterCell}
                 />
-                <GridColumn field="user" title="사용자" width="150" />
+                <GridColumn
+                  field="user"
+                  title="사용자"
+                  // width="150px"
+                />
                 <GridColumn
                   field="used"
                   title="사용용량"
                   cell={NumberCell}
-                  width="120"
+                  // width="120px"
                 />
                 <GridColumn
                   field="yn"
                   title="총요금 정산여부"
-                  width="150"
+                  width="130px"
                   cell={CenterCell}
                 />
               </Grid>
             </GridContainer>
-          </GridContainerWrap>
+          </CssGridContainer>
         </GridContainer>
       </GridContainerWrap>
     </>

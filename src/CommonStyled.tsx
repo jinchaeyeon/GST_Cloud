@@ -17,6 +17,7 @@ export const Gnv = styled.div<TGnv>`
   text-align: center;
   min-height: 100vh;
   background-color: #232323;
+  position: fixed;
 
   .logout span {
     color: #656565;
@@ -60,11 +61,13 @@ export const Content = styled.div<ContentType>`
 export const PageWrap = styled.div`
   padding: 0 20px;
   margin-top: 40px;
-  width: calc(100vw - 180px);
+  width: calc(100vw - ${GNV_WIDTH}px);
+  margin-left: ${GNV_WIDTH}px;
 
   @media (max-width: 768px) {
     margin-top: 0;
     width: 100%;
+    margin-left: 0;
   }
 `;
 
@@ -121,7 +124,7 @@ export const TopTitle = styled.div`
 type TModal = TGnv;
 
 export const Modal = styled.div<TModal>`
-  position: absolute;
+  position: fixed;
   z-index: 10;
   top: 0;
   left: 0;
@@ -146,6 +149,7 @@ export const TitleContainer = styled.div`
     flex-direction: column;
     gap: 10px;
     padding: 10px;
+    display: none;
   }
 `;
 
@@ -387,6 +391,19 @@ export const GridContainer = styled.div<TGridContainer>`
     width: auto;
   }
 `;
+type TCssGridContainer = {
+  gridTemplateColumns: string;
+};
+export const CssGridContainer = styled.div<TCssGridContainer>`
+  width: 100%;
+  display: grid;
+  grid-template-columns: ${(props) => props.gridTemplateColumns};
+  gap: ${LAYOUT_GAP}px;
+
+  @media screen and (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`;
 
 export const GridTitle = styled.h3`
   font-size: 20px;
@@ -546,12 +563,13 @@ export const LoginBox = styled.div`
 `;
 
 export const UserFormBox = styled(LoginBox)`
-  height: auto;
   padding-bottom: 0;
+  height: 100%;
 
   form {
     width: 700px;
     background-color: #fff;
+    border-radius: 0;
   }
   h1,
   label {
@@ -951,6 +969,22 @@ export const UsedMenuBox = styled.div`
   p:last-child {
     border-right: solid 1px #dbdbdb;
   }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+
+    p {
+      border-bottom: none;
+    }
+    p:not(:nth-child(4n)) {
+      border: solid 1px #dbdbdb;
+      border-bottom: none;
+    }
+
+    p:last-child {
+      border: solid 1px #dbdbdb;
+    }
+  }
 `;
 
 export const DashboardBox = styled.div`
@@ -1003,7 +1037,7 @@ export const ServiceStoreContent = styled.div`
   flex-wrap: nowrap;
   overflow-x: auto;
   width: calc(100% + 20px);
-  height: calc(100vh - 130px);
+  /* height: calc(100vh - 130px); */
 
   .item {
     flex: 0 0 auto;
@@ -1014,7 +1048,7 @@ export const ServiceStoreContent = styled.div`
   @media (max-width: 768px) {
     width: 100%;
     flex-direction: column;
-    height: calc(100vh - 160px);
+    /* height: calc(100vh - 160px); */
     .item {
       width: 100%;
     }
@@ -1038,7 +1072,8 @@ export const TopInfo = styled.div`
   position: fixed;
   display: flex;
   height: 40px;
-  width: calc(100vw - 180px);
+  width: calc(100vw - ${GNV_WIDTH}px);
+  left: ${GNV_WIDTH}px;
   border-bottom: solid 1px #dbdbdb;
   justify-content: flex-end;
   align-items: center;

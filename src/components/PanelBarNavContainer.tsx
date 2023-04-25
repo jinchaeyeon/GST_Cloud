@@ -4,10 +4,10 @@ import {
   PanelBarItem,
   PanelBarSelectEventArguments,
 } from "@progress/kendo-react-layout";
-import { useLocation, withRouter } from "react-router-dom";
+import { useHistory, useLocation, withRouter } from "react-router-dom";
 import { Button } from "@progress/kendo-react-buttons";
 import { useRecoilState } from "recoil";
-import { isMenuOpendState, tokenState } from "../store/atoms";
+import { isMenuOpendState, menusState, tokenState } from "../store/atoms";
 import UserOptionsWindow from "./Windows/CommonWindows/UserOptionsWindow";
 import { CLIENT_WIDTH } from "../components/CommonString";
 import { useApi } from "../hooks/api";
@@ -27,6 +27,7 @@ const PanelBarNavContainer = (props: any) => {
   const processApi = useApi();
   const location = useLocation();
   const [token, setToken] = useRecoilState(tokenState);
+  const [menus, setMenus] = useRecoilState(menusState);
   const [isMenuOpend, setIsMenuOpend] = useRecoilState(isMenuOpendState);
   const companyCode = token ? token.companyCode : "";
   const userName = token ? token.userName : "";
@@ -79,9 +80,10 @@ const PanelBarNavContainer = (props: any) => {
   const selected = setSelectedIndex(props.location.pathname);
 
   const logout = useCallback(() => {
+    setMenus(null as any);
     setToken(null as any);
     // 전체 페이지 reload (cache 삭제)
-    (window as any).location = "/";
+    window.location.href = "/";
   }, []);
 
   const onMenuBtnClick = () => {
@@ -89,10 +91,8 @@ const PanelBarNavContainer = (props: any) => {
   };
 
   const onMyPageClick = () => {
-    const link = window.location.href.split("/")[0]+"/"+window.location.href.split("/")[1]+"/"+window.location.href.split("/")[2]+"/MyPage";
-    window.location.href = link;
+    props.history.push("/MyPage");
   };
-
 
   return (
     <Wrapper isMenuOpend={isMenuOpend}>
@@ -151,7 +151,7 @@ const PanelBarNavContainer = (props: any) => {
           />
         </TopTitle>
         <TopInfo>
-          <p style={{cursor: "pointer"}} onClick={onMyPageClick}>
+          <p style={{ cursor: "pointer" }} onClick={onMyPageClick}>
             <span className="k-icon k-i-user"></span>
             {userName}({userId})
           </p>
