@@ -498,15 +498,12 @@ export const FormUpload = (fieldRenderProps: FieldRenderProps) => {
 
   React.useEffect(() => {
     if (fieldRenderProps.value != "" && fieldRenderProps.value != undefined) {
-      const contentType = "image/jpeg";
+      const contentType = "image/jpg";
 
       const blob = b64toBlob(fieldRenderProps.value, contentType);
-      var file = new File([blob], fieldRenderProps.label, {
-        type: contentType,
-      });
 
       const files = {
-        extension: ".jpeg",
+        extension: ".jpg",
         name: `${fieldRenderProps.label}`,
         progress: 0,
         size: blob.size,

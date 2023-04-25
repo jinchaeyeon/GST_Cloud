@@ -88,6 +88,7 @@ const MyPage: React.FC = () => {
   const processUpdate = useCallback(
     async (formData: { [name: string]: any }) => {
       let para = Object.assign({}, formData);
+      console.log(para);
       let data: any;
       if (
         para.UserName == undefined ||
@@ -96,7 +97,7 @@ const MyPage: React.FC = () => {
       ) {
         alert("사용자 정보를 입력해주세요.");
       } else if (
-        para.password == "" &&
+        para.password == "" ||
         para.Password !== para.PasswordConfirm
       ) {
         alert("비밀번호가 맞지 않습니다.");
@@ -126,8 +127,7 @@ const MyPage: React.FC = () => {
         } else {
           setShowLoading(true);
           if (
-            para.BusinessLicense != "" &&
-            typeof para.BusinessLicense == "object"
+            para.BusinessLicense != ""
           ) {
             var fileReader = new FileReader();
             fileReader.readAsDataURL(para.BusinessLicense);
@@ -140,7 +140,7 @@ const MyPage: React.FC = () => {
             };
           }
 
-          if (para.BusinessCard != "" && typeof para.BusinessCard == "object") {
+          if (para.BusinessCard != "") {
             var fileReader = new FileReader();
             fileReader.readAsDataURL(para.BusinessCard);
             fileReader.onload = function (e) {

@@ -127,7 +127,7 @@ export const useApi = () => {
           accept: "*/*",
         };
       }
-      if (name === "file-list"|| name === "sign-up" || name === "user-approval-request"){
+      if (name === "file-list"|| name === "sign-up" || name === "user-approval-request" || name == "user-info-save"){
         headers = { "Content-Type": "multipart/form-data", accept: "*/*" };
       }
 
