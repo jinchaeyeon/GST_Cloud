@@ -849,7 +849,7 @@ export const DetailBox = styled.div`
   position: fixed;
   right: 0;
   top: 0;
-  height: 100vh;
+  height: 100%;
   width: 500px;
   background-color: #fff;
   border-left: solid 1px #efefef;
@@ -858,10 +858,6 @@ export const DetailBox = styled.div`
   flex-direction: column;
   justify-content: space-between;
   z-index: 2;
-
-  // ios 모바일 뷰 디바이스 높이 오류 방지
-  height: -webkit-fill-available;
-  height: fill-available;
 
   .top {
     display: flex;
