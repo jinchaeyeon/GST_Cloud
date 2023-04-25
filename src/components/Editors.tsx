@@ -507,7 +507,7 @@ export const FormUpload = (fieldRenderProps: FieldRenderProps) => {
 
       const files = {
         extension: ".jpeg",
-        name: `${fieldRenderProps.label}.jpeg`,
+        name: `${fieldRenderProps.label}`,
         progress: 0,
         size: blob.size,
         status: 2,
@@ -549,9 +549,15 @@ export const FormUpload = (fieldRenderProps: FieldRenderProps) => {
   };
 
   const onAdd = (event: UploadOnAddEvent) => {
-    setFiles(event.newState);
-    setAffectedFiles(event.affectedFiles[0]);
-    setState(true);
+    if(event.newState[0].extension != undefined) {
+      if([".jpg", ".png"].includes(event.newState[0].extension) == true) {
+        setFiles(event.newState);
+        setAffectedFiles(event.affectedFiles[0]);
+        setState(true);
+      } else {
+        alert("jpg, png 형식이 아닙니다.");
+      }
+    }
   };
 
   const onRemove = (event: UploadOnRemoveEvent) => {
