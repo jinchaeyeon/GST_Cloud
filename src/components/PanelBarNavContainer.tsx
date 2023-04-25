@@ -37,10 +37,6 @@ const PanelBarNavContainer = (props: any) => {
   const [formKey, setFormKey] = useState("");
 
   const paths = [
-    // {
-    //   path: "/Home",
-    //   index: ".0",
-    // },
     {
       path: "/ServiceDashboard",
       index: ".0",
@@ -50,16 +46,8 @@ const PanelBarNavContainer = (props: any) => {
       index: ".1",
     },
     {
-      path: "/GoalAndResult",
-      index: ".2",
-    },
-    {
-      path: "/UsedModules",
-      index: ".3",
-    },
-    {
       path: "/MyPage",
-      index: ".4",
+      index: ".2",
     },
   ];
 

@@ -972,7 +972,7 @@ export const UsedMenuBox = styled.div`
 
   p {
     border: solid 1px #dbdbdb;
-    padding: 10px 0 10px 20px;
+    padding: 10px 20px 10px 20px;
   }
 
   p:not(:nth-child(4n)) {
