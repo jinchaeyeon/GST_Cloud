@@ -68,6 +68,7 @@ export const PageWrap = styled.div`
     margin-top: 0;
     width: 100%;
     margin-left: 0;
+    margin-bottom: 20px;
   }
 `;
 
@@ -328,6 +329,7 @@ export const GridContainerWrap = styled.div<TGridContainerWrap>`
 
   @media (max-width: 768px) {
     flex-direction: column;
+    width: calc(100vw - 40px);
   }
 `;
 
@@ -403,6 +405,25 @@ export const CssGridContainer = styled.div<TCssGridContainer>`
   @media screen and (max-width: 768px) {
     grid-template-columns: 1fr;
   }
+`;
+
+export const DashboardGridContainer = styled.div`
+  display: grid;
+  width: 55%;
+  height: 85vh;
+  gap: 20px;
+  grid-template-rows: 2fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
+`;
+
+type TDashboardGridItem = {
+  column?: string;
+  row?: string;
+};
+
+export const DashboardGridItem = styled.div<TDashboardGridItem>`
+  grid-column: ${(props) => props.column || "auto"};
+  grid-row: ${(props) => props.row || "auto"};
 `;
 
 export const GridTitle = styled.h3`
@@ -951,7 +972,7 @@ export const UsedMenuBox = styled.div`
 
   p {
     border: solid 1px #dbdbdb;
-    padding: 10px 0 10px 20px;
+    padding: 10px 20px 10px 20px;
   }
 
   p:not(:nth-child(4n)) {
@@ -1033,7 +1054,7 @@ export const ServiceStoreContent = styled.div`
   flex-wrap: nowrap;
   overflow-x: auto;
   width: calc(100% + 20px);
-  /* height: calc(100vh - 130px); */
+  height: calc(100vh - 130px);
 
   .item {
     flex: 0 0 auto;
@@ -1044,6 +1065,8 @@ export const ServiceStoreContent = styled.div`
   @media (max-width: 768px) {
     width: 100%;
     flex-direction: column;
+    height: auto;
+
     /* height: calc(100vh - 160px); */
     .item {
       width: 100%;
@@ -1077,6 +1100,7 @@ export const TopInfo = styled.div`
   font-size: 13px;
   color: #6e6e6e;
   background-color: #f3f4f5;
+  z-index: 1;
 
   p {
     line-height: 20px;

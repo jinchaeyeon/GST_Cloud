@@ -50,6 +50,8 @@ footer, header, hgroup, main, menu, nav, section {
 body {
   line-height: 1;  
   overflow: ${(props) => (props.isMenuOpend ? "hidden" : "auto")};
+  /* 가로스크롤방지 */
+  overflow-x: hidden;
 }
 menu, ol, ul {
   list-style: none;

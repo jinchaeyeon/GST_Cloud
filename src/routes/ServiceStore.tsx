@@ -121,7 +121,10 @@ const Map: React.FC = () => {
     const para = { para: `subscribe?id=${detailDataResult.menuId}` };
     try {
       data = await processApi<any>("menu-subscribe", para);
-    } catch (error) {
+    } catch (error: any) {
+      if (error.hasOwnProperty("message")) {
+        alert(error.message);
+      }
       data = null;
     }
 

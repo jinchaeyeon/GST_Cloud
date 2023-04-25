@@ -113,8 +113,17 @@ const Service: React.FC = () => {
           ...item,
           amount: item.amount == undefined ? 0 : item.amount,
           increase_attachment:
-            item.increase_attachment == undefined ? 0 : item.increase_attachment < 0 ? 0 : item.increase_attachment,
-          increase_data: item.increase_data == undefined ? 0 : item.increase_data < 0 ? 0 : item.increase_data,
+            item.increase_attachment == undefined
+              ? 0
+              : item.increase_attachment < 0
+              ? 0
+              : item.increase_attachment,
+          increase_data:
+            item.increase_data == undefined
+              ? 0
+              : item.increase_data < 0
+              ? 0
+              : item.increase_data,
           is_paid: item.is_paid == "Y" ? "O" : item.is_paid == "N" ? "X" : "",
           num: index,
         })
@@ -261,7 +270,7 @@ const Service: React.FC = () => {
             display: "grid",
             gap: "20px",
             height: "85vh",
-            gridTemplateRows: "2fr 1fr 1fr",
+            gridTemplateRows: "2fr 1fr 2fr",
           }}
         >
           <CssGridContainer gridTemplateColumns="2fr 1fr">
@@ -316,18 +325,21 @@ const Service: React.FC = () => {
                       "월"}
                 </p>
                 <p className="pay-amt">
-                  <strong>{mainDataResult2.data.filter(
-                    (item: any) =>
-                      item.num == Object.getOwnPropertyNames(selectedState)[0]
-                  )[0] == undefined
-                    ? 0
-                    : mainDataResult2.data
-                        .filter(
-                          (item: any) =>
-                            item.num ==
-                            Object.getOwnPropertyNames(selectedState)[0]
-                        )[0]
-                        .amount.toLocaleString()}</strong>원
+                  <strong>
+                    {mainDataResult2.data.filter(
+                      (item: any) =>
+                        item.num == Object.getOwnPropertyNames(selectedState)[0]
+                    )[0] == undefined
+                      ? 0
+                      : mainDataResult2.data
+                          .filter(
+                            (item: any) =>
+                              item.num ==
+                              Object.getOwnPropertyNames(selectedState)[0]
+                          )[0]
+                          .amount.toLocaleString()}
+                  </strong>
+                  원
                 </p>
               </DashboardBox>
             </GridContainer>
@@ -338,18 +350,20 @@ const Service: React.FC = () => {
               <GridTitle>사용자 수</GridTitle>
               <DashboardBox>
                 <p>
-                  <strong>{mainDataResult2.data.filter(
-                    (item: any) =>
-                      item.num == Object.getOwnPropertyNames(selectedState)[0]
-                  )[0] == undefined
-                    ? 0
-                    : mainDataResult2.data
-                        .filter(
-                          (item: any) =>
-                            item.num ==
-                            Object.getOwnPropertyNames(selectedState)[0]
-                        )[0]
-                        .user_count.toLocaleString()}</strong>
+                  <strong>
+                    {mainDataResult2.data.filter(
+                      (item: any) =>
+                        item.num == Object.getOwnPropertyNames(selectedState)[0]
+                    )[0] == undefined
+                      ? 0
+                      : mainDataResult2.data
+                          .filter(
+                            (item: any) =>
+                              item.num ==
+                              Object.getOwnPropertyNames(selectedState)[0]
+                          )[0]
+                          .user_count.toLocaleString()}
+                  </strong>
                   <span>명</span>
                 </p>
               </DashboardBox>
@@ -358,18 +372,20 @@ const Service: React.FC = () => {
               <GridTitle>데이터 사용량</GridTitle>
               <DashboardBox>
                 <p>
-                  <strong>{mainDataResult2.data.filter(
-                    (item: any) =>
-                      item.num == Object.getOwnPropertyNames(selectedState)[0]
-                  )[0] == undefined
-                    ? 0
-                    : mainDataResult2.data
-                        .filter(
-                          (item: any) =>
-                            item.num ==
-                            Object.getOwnPropertyNames(selectedState)[0]
-                        )[0]
-                        .increase_data.toLocaleString()}</strong>
+                  <strong>
+                    {mainDataResult2.data.filter(
+                      (item: any) =>
+                        item.num == Object.getOwnPropertyNames(selectedState)[0]
+                    )[0] == undefined
+                      ? 0
+                      : mainDataResult2.data
+                          .filter(
+                            (item: any) =>
+                              item.num ==
+                              Object.getOwnPropertyNames(selectedState)[0]
+                          )[0]
+                          .increase_data.toLocaleString()}
+                  </strong>
                   <span>GB</span>
                 </p>
               </DashboardBox>
@@ -378,25 +394,27 @@ const Service: React.FC = () => {
               <GridTitle>첨부 사용량</GridTitle>
               <DashboardBox>
                 <p>
-                  <strong>{mainDataResult2.data.filter(
-                    (item: any) =>
-                      item.num == Object.getOwnPropertyNames(selectedState)[0]
-                  )[0] == undefined
-                    ? 0
-                    : mainDataResult2.data
-                        .filter(
-                          (item: any) =>
-                            item.num ==
-                            Object.getOwnPropertyNames(selectedState)[0]
-                        )[0]
-                        .increase_attachment.toLocaleString()}</strong>
+                  <strong>
+                    {mainDataResult2.data.filter(
+                      (item: any) =>
+                        item.num == Object.getOwnPropertyNames(selectedState)[0]
+                    )[0] == undefined
+                      ? 0
+                      : mainDataResult2.data
+                          .filter(
+                            (item: any) =>
+                              item.num ==
+                              Object.getOwnPropertyNames(selectedState)[0]
+                          )[0]
+                          .increase_attachment.toLocaleString()}
+                  </strong>
                   <span>GB</span>
                 </p>
               </DashboardBox>
             </GridContainer>
           </CssGridContainer>
-          <CssGridContainer gridTemplateColumns="repeat(2, 1fr)">
-            <GridContainer>
+          <GridContainerWrap>
+            <GridContainer width="50%">
               <GridTitle>모듈별 사용빈도</GridTitle>
               <Chart style={{ height: "calc(100% - 35px)" }}>
                 <ChartSeries>
@@ -419,7 +437,7 @@ const Service: React.FC = () => {
                 <ChartLegend visible={false} />
               </Chart>
             </GridContainer>
-            <GridContainer>
+            <GridContainer width="50%">
               <GridTitle>월별 사용내역</GridTitle>
               <Grid
                 style={{ height: "calc(100% - 35px)" }}
@@ -455,7 +473,7 @@ const Service: React.FC = () => {
                 <GridColumn
                   field="date"
                   title="월"
-                  width="50px"
+                  width="60px"
                   // footerCell={mainTotalFooterCell}
                 />
                 <GridColumn
@@ -474,18 +492,18 @@ const Service: React.FC = () => {
                   field="amount"
                   cell={NumberCell}
                   title="금액"
-                  width="80px"
+                  width="90px"
                 />
                 <GridColumn
                   field="increase_data"
                   title="데이터 사용량"
-                  width="100px"
+                  width="120px"
                   cell={NumberCell}
                 />
                 <GridColumn
                   field="increase_attachment"
                   title="첨부파일 사용량"
-                  width="100px"
+                  width="130px"
                   cell={NumberCell}
                 />
                 <GridColumn
@@ -496,7 +514,7 @@ const Service: React.FC = () => {
                 />
               </Grid>
             </GridContainer>
-          </CssGridContainer>
+          </GridContainerWrap>
         </GridContainer>
       </GridContainerWrap>
     </>

@@ -37,10 +37,6 @@ const PanelBarNavContainer = (props: any) => {
   const [formKey, setFormKey] = useState("");
 
   const paths = [
-    // {
-    //   path: "/Home",
-    //   index: ".0",
-    // },
     {
       path: "/ServiceDashboard",
       index: ".0",
@@ -50,12 +46,8 @@ const PanelBarNavContainer = (props: any) => {
       index: ".1",
     },
     {
-      path: "/GoalAndResult",
+      path: "/MyPage",
       index: ".2",
-    },
-    {
-      path: "/UsedModules",
-      index: ".3",
     },
   ];
 
@@ -110,25 +102,8 @@ const PanelBarNavContainer = (props: any) => {
             title={"서비스 스토어"}
             route="/ServiceStore"
           ></PanelBarItem>
+          <PanelBarItem title={"마이 페이지"} route="/MyPage"></PanelBarItem>
         </PanelBar>
-
-        {/* GST */}
-        {companyCode === "2207C612" && (
-          <PanelBar
-            selected={selected}
-            expandMode={"single"}
-            onSelect={onSelect}
-          >
-            <PanelBarItem title={"Home"} route="/Home"></PanelBarItem>
-
-            <PanelBarItem title={"전사관리"}>
-              <PanelBarItem title={"Scheduler"} route="/CM_A1600W" />
-            </PanelBarItem>
-            <PanelBarItem title={"전자결재"}>
-              <PanelBarItem title={"결재관리"} route="/EA_A2000W" />
-            </PanelBarItem>
-          </PanelBar>
-        )}
 
         <Button
           onClick={logout}
