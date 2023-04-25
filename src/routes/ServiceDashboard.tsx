@@ -36,119 +36,35 @@ import {
   TooltipContext,
 } from "@progress/kendo-react-charts";
 import "hammerjs";
-import { numberWithCommas } from "../components/CommonFunction";
+import {
+  convertDateToStr,
+  numberWithCommas,
+} from "../components/CommonFunction";
 import CenterCell from "../components/Cells/CenterCell";
 
 //그리드 별 키 필드값
-const DATA_ITEM_KEY = "service_name";
+const DATA_ITEM_KEY = "num";
 type TMainDataResult = {
-  category: string;
-  formId: string;
-  menuId: string;
-  menuName: string;
-  parentMenuId: string;
-  parentMenuName: string;
-  subscribed: boolean;
+  count: number;
+  form_id: string;
+  menu_id: string;
+  menu_name: string;
+  parent_menu_id: string;
+  parent_menu_name: string;
+};
+
+type TGroupDataResult = {
+  menu_id: string;
+  menu_name: string;
+  count: number;
 };
 
 const Service: React.FC = () => {
-  //그리드 데이터 결과값
-  const [usedModulesData, setUsedModulesData] = useState([
-    {
-      stat: "영업관리",
-      count: 8,
-      color: "#0e5a7e",
-    },
-    {
-      stat: "전사관리",
-      count: 8,
-      color: "#166f99",
-    },
-    {
-      stat: "회계관리",
-      count: 8,
-      color: "#2185b4",
-    },
-    {
-      stat: "인사관리",
-      count: 6,
-      color: "#319fd2",
-    },
-    {
-      stat: "물류관리",
-      count: 5,
-      color: "#3eaee2",
-    },
-  ]);
-  const [mainDataResult1, setMainDataResult1] = useState([
-    { name: "수주처리" },
-    { name: "출고현황" },
-    { name: "출하처리" },
-    { name: "수주현황조회" },
-    { name: "판매처리" },
-    { name: "출하지시" },
-    { name: "수금처리" },
-    { name: "견적처리" },
-    { name: "프로젝트진행현황" },
-    { name: "매출매입장" },
-    { name: "수주이력변경" },
-    { name: "기타출고" },
-    { name: "견적관리대장" },
-    { name: "반품처리참조" },
-    { name: "수금전표생성" },
-    { name: "매출자료" },
-    { name: "매출통합전표" },
-    { name: "매출E-TAX에러확인" },
-    { name: "직접판매처리" },
-    { name: "매출대비원자재조회" },
-    { name: "납기준수율" },
-  ]);
-  const [mainDataResult4, setMainDataResult4] = useState([
-    { name: "지급처리" },
-    { name: "입고현황" },
-    { name: "발주대비입고현황" },
-    { name: "발주현황" },
-    { name: "자재발주" },
-    { name: "발주입고", purchased: false },
-    { name: "팔레트관리", purchased: false },
-    { name: "구매계획", purchased: false },
-    { name: "매입확정", purchased: false },
-    { name: "재고현황", purchased: false },
-  ]);
-  const [mainDataResult3, setMainDataResult3] = useState([
-    { name: "출퇴근관리" },
-    { name: "증명서 발급" },
-    { name: "정산기준" },
-    { name: "연금보험료" },
-    { name: "급여임금관리" },
-    { name: "지급공제관리" },
-  ]);
-  const [mainDataResult5, setMainDataResult5] = useState([
-    { name: "자금일보" },
-    { name: "계정관리" },
-    { name: "영세율표제" },
-    { name: "대체전표" },
-    { name: "지출결의서" },
-    { name: "부가세비교" },
-    { name: "자금관리" },
-    { name: "자금계획" },
-  ]);
-  const [mainDataResult6, setMainDataResult6] = useState([
-    { name: "공통코드정보" },
-    { name: "사용자그룹" },
-    { name: "사용자 권한" },
-    { name: "마감정보" },
-  ]);
-  const [mainDataResult7, setMainDataResult7] = useState([
-    { name: "업무일지" },
-    { name: "일정조회" },
-    { name: "임률관리" },
-    { name: "자료실" },
-    { name: "공지사항" },
-    { name: "스케줄러" },
-    { name: "프로젝트 마스터" },
-    { name: "MBO" },
-  ]);
+  const [groupDataResult, setGroupDataResult] = useState<TGroupDataResult[]>(
+    []
+  );
+  const [menuDataResult, setMenuDataResult] = useState<TMainDataResult[]>([]);
+
   const setLoading = useSetRecoilState(isLoading);
   const processApi = useApi();
   const idGetter = getter(DATA_ITEM_KEY);
@@ -158,20 +74,8 @@ const Service: React.FC = () => {
     sort: [],
   });
 
-  const [mainDataResult, setMainDataResult] = useState<TMainDataResult[]>([]);
   const [mainDataResult2, setMainDataResult2] = useState<DataResult>(
-    process(
-      [
-        { month: "1월", user: "관리자", used: "556MB", yn: "O" },
-        { month: "2월", user: "관리자", used: "0MB", yn: "" },
-        { month: "3월", user: "관리자", used: "55MB", yn: "O" },
-        { month: "4월", user: "관리자", used: "55MB", yn: "O" },
-        { month: "5월", user: "관리자", used: "5MB", yn: "O" },
-        { month: "6월", user: "관리자", used: "78MB", yn: "O" },
-        { month: "7월", user: "관리자", used: "41MB", yn: "O" },
-      ],
-      mainDataState
-    )
+    process([], mainDataState)
   );
 
   //선택 상태
@@ -179,22 +83,88 @@ const Service: React.FC = () => {
     [id: string]: boolean | number[];
   }>({});
 
+  const [categories, setCategories] = useState<string[]>([]);
+  const [usercount, setUserCount] = useState<number[]>([]);
+  const [menucount, setMenuCount] = useState<number[]>([]);
+  const [datausedmb, setDateusedmb] = useState<number[]>([]);
+  const [attachmentsizemb, setAttachmentsizemb] = useState<number[]>([]);
   //데이터 조회
   const fetchMainData = async () => {
     let data: any;
     setLoading(true);
+    let menuPara = {
+      para:
+        "?fromDate=" +
+        convertDateToStr(new Date(new Date().getFullYear(), 0, 1)) +
+        "&toDate=" +
+        convertDateToStr(new Date()),
+    };
     try {
-      data = await processApi<any>("menus-view");
+      data = await processApi<any>("dashboard", menuPara);
     } catch (error) {
       data = null;
     }
 
     if (data !== null) {
-      const rows = data.allMenu.filter(
-        (menu: TMainDataResult) => menu.menuName !== "PlusWin6"
+      const dataUsageRows = data.dataUsage.Rows.reverse();
+      const usageAmountRows = data.usageAmount.Rows.map(
+        (item: any, index: number) => ({
+          ...item,
+          amount: item.amount == undefined ? 0 : item.amount,
+          increase_attachment:
+            item.increase_attachment == undefined ? 0 : item.increase_attachment < 0 ? 0 : item.increase_attachment,
+          increase_data: item.increase_data == undefined ? 0 : item.increase_data < 0 ? 0 : item.increase_data,
+          is_paid: item.is_paid == "Y" ? "O" : item.is_paid == "N" ? "X" : "",
+          num: index,
+        })
       );
+      const menuGroup = data.menuGroup.Rows.map((item: any) => ({
+        ...item,
+        count: 0,
+      }));
+      const menuUsage = data.menuUsage.Rows;
+      const month = dataUsageRows.map((item: any) => {
+        return item.date.substring(4, 6) + "월";
+      });
+      const usercounts = dataUsageRows.map((item: any) => {
+        return item.user_count == undefined ? 0 : item.user_count;
+      });
+      const menucounts = dataUsageRows.map((item: any) => {
+        return item.menu_count == undefined ? 0 : item.menu_count;
+      });
+      const datausedmbs = dataUsageRows.map((item: any) => {
+        return item.data_used_mb == undefined ? 0 : item.data_used_mb;
+      });
+      const attachmentsizembs = dataUsageRows.map((item: any) => {
+        return item.attachment_size_mb == undefined
+          ? 0
+          : item.attachment_size_mb;
+      });
 
-      setMainDataResult(rows);
+      setCategories(month);
+      setUserCount(usercounts);
+      setMenuCount(menucounts);
+      setDateusedmb(datausedmbs);
+      setAttachmentsizemb(attachmentsizembs);
+      menuGroup.map((item: any) => {
+        menuUsage.map((item2: any) => {
+          if (item.menu_id == item2.parent_menu_id) {
+            item.count += 1;
+          }
+        });
+      });
+      setGroupDataResult(menuGroup);
+      setMenuDataResult(menuUsage);
+      setMainDataResult2((prev) => {
+        return {
+          data: usageAmountRows,
+          total: usageAmountRows.length,
+        };
+      });
+
+      const firstRowData = usageAmountRows[0];
+
+      setSelectedState({ [firstRowData[DATA_ITEM_KEY]]: true });
     } else {
       console.log("[에러발생]");
       console.log(data);
@@ -215,9 +185,6 @@ const Service: React.FC = () => {
     });
 
     setSelectedState(newSelectedState);
-
-    const selectedIdx = event.startRowIndex;
-    const selectedRowData = event.dataItems[selectedIdx];
   };
 
   //그리드의 dataState 요소 변경 시 => 데이터 컨트롤에 사용되는 dataState에 적용
@@ -240,26 +207,21 @@ const Service: React.FC = () => {
   };
 
   const labelContent = (props: any) => {
-    return `${props.category} (${props.value})`;
+    return `${props.dataItem.menu_name} (${props.dataItem.count})`;
   };
-
-  const categories = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
 
   const list = (id: string) => {
     let data: any = [];
 
-    mainDataResult.map((datas) => {
-      if (
-        datas.category !== "GROUP" &&
-        datas.subscribed == true &&
-        datas.parentMenuId == id
-      ) {
+    menuDataResult.map((datas) => {
+      if (datas.parent_menu_id == id) {
         data.push(datas);
       }
     });
 
     return data;
   };
+
   return (
     <>
       <TitleContainer>
@@ -270,24 +232,26 @@ const Service: React.FC = () => {
         <GridContainer style={{ height: "85vh" }} width="45%">
           <GridTitle>이용중인 메뉴</GridTitle>
           <UsedMenusBox>
-            {mainDataResult &&
-              mainDataResult.filter(
-                (data) =>
-                  data.category === "GROUP" &&
-                  data.subscribed == true
-              ).length == 0 ? (
-                <p style={{textAlign : "center", paddingTop: `calc(50% - 35px)`, fontWeight: "bolder", color: "gray"}}>구독 중인 메뉴가 없습니다.</p>
-              ) : mainDataResult &&
-                mainDataResult.map(
-                  (data) =>
-                    data.category === "GROUP" &&
-                    data.subscribed == true && (
-                      <UsedMenus
-                        title={data.menuName}
-                        mainDataResult={list(data.menuId)}
-                      />
-                    )
-                )}
+            {menuDataResult && menuDataResult.length == 0 ? (
+              <p
+                style={{
+                  textAlign: "center",
+                  paddingTop: `calc(50% - 35px)`,
+                  fontWeight: "bolder",
+                  color: "gray",
+                }}
+              >
+                구독 중인 메뉴가 없습니다.
+              </p>
+            ) : (
+              groupDataResult &&
+              groupDataResult.map((data) => (
+                <UsedMenus
+                  title={data.menu_name}
+                  mainDataResult={list(data.menu_id)}
+                />
+              ))
+            )}
           </UsedMenusBox>
         </GridContainer>
         <GridContainer
@@ -315,18 +279,10 @@ const Service: React.FC = () => {
                   />
                 </ChartCategoryAxis>
                 <ChartSeries>
-                  <ChartSeriesItem
-                    type="area"
-                    data={[123, 276, 310, 212, 240, 156, 98]}
-                  />
-                  <ChartSeriesItem
-                    type="area"
-                    data={[165, 210, 287, 144, 190, 167, 212]}
-                  />
-                  <ChartSeriesItem
-                    type="area"
-                    data={[56, 140, 195, 46, 123, 78, 95]}
-                  />
+                  <ChartSeriesItem type="area" data={usercount} />
+                  <ChartSeriesItem type="area" data={menucount} />
+                  <ChartSeriesItem type="area" data={datausedmb} />
+                  <ChartSeriesItem type="area" data={attachmentsizemb} />
                 </ChartSeries>
               </Chart>
             </GridContainer>
@@ -337,9 +293,45 @@ const Service: React.FC = () => {
                   alignItems: "center",
                 }}
               >
-                <p className="pay-date">23년 7월</p>
+                <p className="pay-date">
+                  {mainDataResult2.data.filter(
+                    (item: any) =>
+                      item.num == Object.getOwnPropertyNames(selectedState)[0]
+                  )[0] == undefined
+                    ? convertDateToStr(new Date()).substring(2, 4) +
+                      "년" +
+                      convertDateToStr(new Date()).substring(4, 6) +
+                      "월"
+                    : mainDataResult2.data
+                        .filter(
+                          (item: any) =>
+                            item.num ==
+                            Object.getOwnPropertyNames(selectedState)[0]
+                        )[0]
+                        .date.substring(2, 4) +
+                      "년" +
+                      mainDataResult2.data
+                        .filter(
+                          (item: any) =>
+                            item.num ==
+                            Object.getOwnPropertyNames(selectedState)[0]
+                        )[0]
+                        .date.substring(4, 6) +
+                      "월"}
+                </p>
                 <p className="pay-amt">
-                  <strong>400,000</strong>원
+                  <strong>{mainDataResult2.data.filter(
+                    (item: any) =>
+                      item.num == Object.getOwnPropertyNames(selectedState)[0]
+                  )[0] == undefined
+                    ? 0
+                    : mainDataResult2.data
+                        .filter(
+                          (item: any) =>
+                            item.num ==
+                            Object.getOwnPropertyNames(selectedState)[0]
+                        )[0]
+                        .amount.toLocaleString()}</strong>원
                 </p>
               </DashboardBox>
             </GridContainer>
@@ -354,7 +346,18 @@ const Service: React.FC = () => {
               <GridTitle>사용자 수</GridTitle>
               <DashboardBox>
                 <p>
-                  <strong>52</strong>
+                  <strong>{mainDataResult2.data.filter(
+                    (item: any) =>
+                      item.num == Object.getOwnPropertyNames(selectedState)[0]
+                  )[0] == undefined
+                    ? 0
+                    : mainDataResult2.data
+                        .filter(
+                          (item: any) =>
+                            item.num ==
+                            Object.getOwnPropertyNames(selectedState)[0]
+                        )[0]
+                        .user_count.toLocaleString()}</strong>
                   <span>명</span>
                 </p>
               </DashboardBox>
@@ -363,7 +366,18 @@ const Service: React.FC = () => {
               <GridTitle>데이터 사용량</GridTitle>
               <DashboardBox>
                 <p>
-                  <strong>1.24</strong>
+                  <strong>{mainDataResult2.data.filter(
+                    (item: any) =>
+                      item.num == Object.getOwnPropertyNames(selectedState)[0]
+                  )[0] == undefined
+                    ? 0
+                    : mainDataResult2.data
+                        .filter(
+                          (item: any) =>
+                            item.num ==
+                            Object.getOwnPropertyNames(selectedState)[0]
+                        )[0]
+                        .increase_data.toLocaleString()}</strong>
                   <span>GB</span>
                 </p>
               </DashboardBox>
@@ -372,7 +386,18 @@ const Service: React.FC = () => {
               <GridTitle>첨부 사용량</GridTitle>
               <DashboardBox>
                 <p>
-                  <strong>1.02</strong>
+                  <strong>{mainDataResult2.data.filter(
+                    (item: any) =>
+                      item.num == Object.getOwnPropertyNames(selectedState)[0]
+                  )[0] == undefined
+                    ? 0
+                    : mainDataResult2.data
+                        .filter(
+                          (item: any) =>
+                            item.num ==
+                            Object.getOwnPropertyNames(selectedState)[0]
+                        )[0]
+                        .increase_attachment.toLocaleString()}</strong>
                   <span>GB</span>
                 </p>
               </DashboardBox>
@@ -390,7 +415,7 @@ const Service: React.FC = () => {
                 <ChartSeries>
                   <ChartSeriesItem
                     type="funnel"
-                    data={usedModulesData}
+                    data={groupDataResult}
                     categoryField="stat"
                     field="count"
                     colorField="color"
@@ -414,6 +439,7 @@ const Service: React.FC = () => {
                 data={process(
                   mainDataResult2.data.map((row) => ({
                     ...row,
+                    date: row.date.substring(4, 6) + "월",
                     [SELECTED_FIELD]: selectedState[idGetter(row)], //선택된 데이터
                   })),
                   mainDataState
@@ -440,22 +466,45 @@ const Service: React.FC = () => {
                 resizable={true}
               >
                 <GridColumn
-                  field="month"
+                  field="date"
                   title="월"
-                  width="80"
+                  width="50px"
                   // footerCell={mainTotalFooterCell}
                 />
-                <GridColumn field="user" title="사용자" width="150" />
                 <GridColumn
-                  field="used"
-                  title="사용용량"
+                  field="menu_count"
+                  title="메뉴 개수"
+                  width="80px"
                   cell={NumberCell}
-                  width="120"
                 />
                 <GridColumn
-                  field="yn"
-                  title="총요금 정산여부"
-                  width="150"
+                  field="user_count"
+                  title="사용자 수"
+                  width="80px"
+                  cell={NumberCell}
+                />
+                <GridColumn
+                  field="amount"
+                  cell={NumberCell}
+                  title="금액"
+                  width="80px"
+                />
+                <GridColumn
+                  field="increase_data"
+                  title="데이터 사용량"
+                  width="100px"
+                  cell={NumberCell}
+                />
+                <GridColumn
+                  field="increase_attachment"
+                  title="첨부파일 사용량"
+                  width="100px"
+                  cell={NumberCell}
+                />
+                <GridColumn
+                  field="is_paid"
+                  title="정산여부"
+                  width="80px"
                   cell={CenterCell}
                 />
               </Grid>
@@ -483,7 +532,7 @@ const UsedMenus = ({ title, mainDataResult }: any) => {
             }}
             key={idx}
           >
-            {row.menuName}
+            {row.menu_name}
           </p>
         ))}
       </UsedMenuBox>

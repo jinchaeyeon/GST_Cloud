@@ -25,6 +25,9 @@ const domain: any = {
   "menu-unsubscribe": { action: "post", url: "c/menu/:para" },
   //매뉴얼 다운로드
   "manual-download": { action: "get", url: "api/files/manual/:id" },
+  //메인화면 조회
+  "dashboard": { action: "get", url: "c/dashboard/:para" },
+
 
   /* GST 기존 API */
   procedure: { action: "post", url: "api/data/sql-procedure" },
