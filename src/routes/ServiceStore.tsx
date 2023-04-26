@@ -4,6 +4,7 @@ import { useSetRecoilState } from "recoil";
 import { isLoading } from "../store/atoms";
 import { useApi } from "../hooks/api";
 import {
+  ButtonContainer,
   CardBox,
   DetailBox,
   FilterTextContainer,
@@ -15,7 +16,7 @@ import {
 } from "../CommonStyled";
 import { Button } from "@progress/kendo-react-buttons";
 import { numberWithCommas } from "../components/CommonFunction";
-import { Input } from "@progress/kendo-react-inputs";
+import { Input, Switch } from "@progress/kendo-react-inputs";
 
 type TMainDataResult = {
   category: string;
@@ -53,6 +54,7 @@ const Map: React.FC = () => {
     useState<TDetailDataResult>(null);
   const [selectedCard, setSelectedCard] = useState<TSelectedCard>(null);
   const [filterText, setFilterText] = useState("");
+  const [filterToggle, setFilterToggle] = useState(false);
 
   const setLoading = useSetRecoilState(isLoading);
   const processApi = useApi();
@@ -220,10 +222,21 @@ const Map: React.FC = () => {
     <>
       <TitleContainer>
         <Title>서비스 스토어</Title>
-        <FilterTextContainer>
-          <div className="k-icon k-i-search"></div>
-          <Input value={filterText} onChange={(e) => setFilterText(e.value)} />
-        </FilterTextContainer>
+        <ButtonContainer>
+          <Switch
+            onLabel={"구독"}
+            offLabel={"전체"}
+            checked={filterToggle}
+            onChange={(e) => setFilterToggle((prev) => !prev)}
+          />
+          <FilterTextContainer>
+            <div className="k-icon k-i-search"></div>
+            <Input
+              value={filterText}
+              onChange={(e) => setFilterText(e.value)}
+            />
+          </FilterTextContainer>
+        </ButtonContainer>
       </TitleContainer>
       <ServiceStoreContent>
         {mainDataResult &&
@@ -235,6 +248,7 @@ const Map: React.FC = () => {
                   groupMenu={data}
                   menus={getMenusDataByGroup(mainDataResult, data.menuId)}
                   filterText={filterText}
+                  filterToggle={filterToggle}
                   selectedCard={selectedCard}
                   onCardClick={handleCardClick}
                 />
@@ -298,7 +312,7 @@ const Map: React.FC = () => {
                     (detailDataResult.price
                       ? Number(detailDataResult.price)
                       : 6000) *
-                      ((100 - 40) / 100)
+                      ((100 - 30) / 100)
                   )}
                   원
                 </p>
@@ -335,6 +349,7 @@ type TMenu = {
   groupMenu: TMainDataResult;
   menus: TMainDataResult[];
   filterText: string;
+  filterToggle: boolean;
   selectedCard: TSelectedCard;
   onCardClick: (title: string) => void;
 };
@@ -342,16 +357,19 @@ const Menu = ({
   groupMenu,
   menus,
   filterText,
+  filterToggle,
   selectedCard,
   onCardClick,
 }: TMenu) => {
-  return menus.some((menu) => menu.menuName.includes(filterText)) ? (
+  return menus.some((menu) => menu.menuName.includes(filterText)) &&
+    menus.some((menu) => (filterToggle ? menu.subscribed : true)) ? (
     <div className="item">
       <GridTitle>{groupMenu.menuName}</GridTitle>
       <CardBox>
         {menus.map(
           (menu) =>
-            menu.menuName.includes(filterText) && (
+            menu.menuName.includes(filterText) &&
+            (filterToggle ? menu.subscribed : true) && (
               <Card
                 style={menu.subscribed == true ? (menu.category == "FORM" ? { backgroundColor: '#9ECBA5', backgroundImage: `url('${process.env.PUBLIC_URL}/earth-icon.png')`, backgroundRepeat: "no-repeat", float: "right", backgroundPosition: "96% 50%", backgroundSize: "auto 70%"} : menu.category == "WEB" ? { backgroundColor: '#9BC2C9', backgroundImage: `url('${process.env.PUBLIC_URL}/windows-icon.png')`, backgroundRepeat: "no-repeat", float: "right", backgroundPosition: "96% 50%", backgroundSize: "auto 70%"}: { backgroundColor: 'white'}) : { backgroundColor: 'white'}}
                 key={menu.menuId}

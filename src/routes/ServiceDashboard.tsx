@@ -32,6 +32,7 @@ import {
   ChartLegend,
   ChartSeries,
   ChartSeriesItem,
+  ChartSeriesItemTooltip,
   ChartSeriesLabels,
   ChartTooltip,
   TooltipContext,
@@ -294,6 +295,7 @@ const Service: React.FC = () => {
             <GridContainer>
               <GridTitle>서비스 측정</GridTitle>
               <Chart style={{ height: "calc(100% - 35px)" }}>
+                <ChartLegend position="top" orientation="horizontal" />
                 <ChartCategoryAxis>
                   <ChartCategoryAxisItem
                     title={{ text: "월별 측정" }}
@@ -301,10 +303,30 @@ const Service: React.FC = () => {
                   />
                 </ChartCategoryAxis>
                 <ChartSeries>
-                  <ChartSeriesItem type="area" data={usercount} />
-                  <ChartSeriesItem type="area" data={menucount} />
-                  <ChartSeriesItem type="area" data={datausedmb} />
-                  <ChartSeriesItem type="area" data={attachmentsizemb} />
+                  <ChartSeriesItem
+                    type="area"
+                    data={usercount}
+                    name="사용자 수"
+                  >
+                    <ChartSeriesItemTooltip />
+                  </ChartSeriesItem>
+                  <ChartSeriesItem type="area" data={menucount} name="메뉴 수">
+                    <ChartSeriesItemTooltip />{" "}
+                  </ChartSeriesItem>
+                  <ChartSeriesItem
+                    type="area"
+                    data={datausedmb}
+                    name="데이터 사용량"
+                  >
+                    <ChartSeriesItemTooltip />
+                  </ChartSeriesItem>
+                  <ChartSeriesItem
+                    type="area"
+                    data={attachmentsizemb}
+                    name="첨부 사용량"
+                  >
+                    <ChartSeriesItemTooltip />
+                  </ChartSeriesItem>
                 </ChartSeries>
               </Chart>
             </GridContainer>
