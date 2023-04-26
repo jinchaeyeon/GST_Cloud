@@ -17,6 +17,7 @@ import {
 import { Button } from "@progress/kendo-react-buttons";
 import { numberWithCommas } from "../components/CommonFunction";
 import { Input, Switch } from "@progress/kendo-react-inputs";
+import { LinearGradient } from "@progress/kendo-drawing";
 
 type TMainDataResult = {
   category: string;
@@ -277,7 +278,7 @@ const Map: React.FC = () => {
               {detailDataResult.preview ? (
                 <img
                   src={`data:image/jpeg;base64,${detailDataResult.preview}`}
-                  style={{maxWidth: "400px", maxHeight: "800px"}}
+                  style={{ maxWidth: "400px", maxHeight: "800px" }}
                   alt="preview"
                 />
               ) : (
@@ -371,7 +372,37 @@ const Menu = ({
             menu.menuName.includes(filterText) &&
             (filterToggle ? menu.subscribed : true) && (
               <Card
-                style={menu.subscribed == true ? (menu.category == "FORM" ? { backgroundColor: '#9ECBA5', backgroundImage: `url('${process.env.PUBLIC_URL}/earth-icon.png')`, backgroundRepeat: "no-repeat", float: "right", backgroundPosition: "96% 50%", backgroundSize: "auto 70%"} : menu.category == "WEB" ? { backgroundColor: '#9BC2C9', backgroundImage: `url('${process.env.PUBLIC_URL}/windows-icon.png')`, backgroundRepeat: "no-repeat", float: "right", backgroundPosition: "96% 50%", backgroundSize: "auto 70%"}: { backgroundColor: 'white'}) : { backgroundColor: 'white'}}
+                style={
+                    menu.category == "FORM"
+                      ? {
+                          border: "2px solid #ace394",
+                          backgroundImage: `linear-gradient(
+                        rgba(255, 255, 255, 0.5),
+                        rgba(255, 255, 255, 0.5)
+                      ), url('${process.env.PUBLIC_URL}/windows-icon.png')`,
+                          backgroundRepeat: "no-repeat",
+                          float: "right",
+                          backgroundPosition: "108% -200%",
+                          backgroundSize: "auto 110%",
+                          width: "240px",
+                          height: "60px"
+                        }
+                      : menu.category == "WEB"
+                      ? {
+                          border: "2px solid #9BC2C9",
+                          backgroundImage: `linear-gradient(
+                        rgba(255, 255, 255, 0.5),
+                        rgba(255, 255, 255, 0.5)
+                      ), url('${process.env.PUBLIC_URL}/earth-icon.png')`,
+                          backgroundRepeat: "no-repeat",
+                          float: "right",
+                          backgroundPosition: "112% -100%",
+                          backgroundSize: "auto 120%",
+                          width: "240px",
+                          height: "60px"
+                        }
+                      : { backgroundColor: "white" }
+                }
                 key={menu.menuId}
                 onClick={() => onCardClick(menu.menuId)}
                 className={
@@ -382,9 +413,9 @@ const Menu = ({
               >
                 <CardBody>
                   <p>{menu.menuName}</p>
-                  {/* {menu.subscribed && (
-                    // <span className="subscribe-badge">구독중</span>
-                  )} */}
+                  {menu.subscribed && (
+                    <span className="subscribe-badge">구독중</span>
+                  )}
                 </CardBody>
               </Card>
             )
