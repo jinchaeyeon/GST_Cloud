@@ -25,7 +25,6 @@ const SignUp: React.FC = () => {
   const [token, setToken] = useRecoilState(tokenState);
   const [menus, setMenus] = useRecoilState(menusState);
   const setShowLoading = useSetRecoilState(isLoading);
-  // const [bizyn, setBizyn] = useState<boolean>(false);
   const history = useHistory();
   const processApi = useApi();
 
@@ -50,10 +49,15 @@ const SignUp: React.FC = () => {
         alert("비밀번호가 맞지 않습니다.");
       } else {
         if (
+          para.CompanyName == undefined &&
+          para.BusinessNumber == undefined &&
+          para.BusinessOwner == undefined &&
+          para.BusinessAddress == undefined &&
+          para.BusinessType == undefined &&
           para.BusinessLicense == undefined &&
           para.BusinessCard == undefined
-        ) {
-          if (para.User_yn == true && para.Bus_yn == true) {
+          ) {
+          if (para.User_yn == true) {
             setShowLoading(true);
             try {
               data = await processApi<any>("sign-up", para);
@@ -69,10 +73,10 @@ const SignUp: React.FC = () => {
               history.replace("/");
             }
           } else {
-            alert("이용 동의를 해주세요");
+            alert("개인정보 이용 동의를 해주세요");
           }
         } else {
-          if (para.User_yn == true &&para.Bus_yn == true) {
+          if (para.User_yn == true && para.Bus_yn == true) {
             //&& para.Bus_OK_yn == true
             setShowLoading(true);
             if (para.BusinessLicense != undefined) {
@@ -111,8 +115,10 @@ const SignUp: React.FC = () => {
             }
 
             setShowLoading(false);
+          } else if(para.Bus_yn == true) {
+            alert("개인정보 이용 동의를 해주세요");
           } else {
-            alert("이용 동의를 해주세요");
+            alert("기업 정보 이용 동의를 해주세요");
           }
         }
       }
@@ -201,13 +207,13 @@ const SignUp: React.FC = () => {
                 name={"CompanyName"}
                 label={"회사명"}
                 component={FormInput}
-                validator={emailValidator}
+                // validator={emailValidator}
               />
               <Field
                 name={"BusinessNumber"}
                 label={"사업자 등록 번호"}
                 component={FormInput}
-                validator={emailValidator}
+                //validator={emailValidator}
               />
             </FieldWrap>
             <FieldWrap fieldWidth="50%">
@@ -215,13 +221,13 @@ const SignUp: React.FC = () => {
                 name={"BusinessOwner"}
                 label={"대표자명"}
                 component={FormInput}
-                validator={emailValidator}
+                //validator={emailValidator}
               />
               <Field
                 name={"BusinessAddress"}
                 label={"회사주소"}
                 component={FormInput}
-                validator={emailValidator}
+                //validator={emailValidator}
               />
             </FieldWrap>
             <FieldWrap fieldWidth="100%" className="full-form-field">
@@ -229,7 +235,7 @@ const SignUp: React.FC = () => {
                 name={"BusinessType"}
                 label={"업종"}
                 component={FormInput}
-                validator={emailValidator}
+                //validator={emailValidator}
               />
             </FieldWrap>
             <FieldWrap fieldWidth="100%" className="full-form-field">
@@ -237,7 +243,7 @@ const SignUp: React.FC = () => {
                 name={"BusinessLicense"}
                 label={"사업자등록증"}
                 component={FormUpload}
-                validator={emailValidator}
+                //validator={emailValidator}
               />
             </FieldWrap>
             <FieldWrap fieldWidth="100%" className="full-form-field">
@@ -245,7 +251,7 @@ const SignUp: React.FC = () => {
                 name={"BusinessCard"}
                 label={"명함"}
                 component={FormUpload}
-                validator={emailValidator}
+                //validator={emailValidator}
               />
             </FieldWrap>
             <div className="term-checkbox-container">
@@ -255,20 +261,6 @@ const SignUp: React.FC = () => {
                 label={"기업정보 이용 동의"}
                 component={FormCheckbox}
               />
-              {/* {bizyn == true ? ( <Field
-                id={"Bus_OK_yn"}
-                name={"Bus_OK_yn"}
-                label={"기업 승인 요청"}
-                component={FormCheckbox}
-                // validator={termsValidator}
-              />) : ( <Field
-                id={"Bus_OK_yn"}
-                name={"Bus_OK_yn"}
-                label={"기업 승인 요청"}
-                component={FormCheckbox}
-                disabled={true}
-                // validator={termsValidator}
-              />)} */}
             </div>
             <Button className="sign-up-btn" themeColor={"primary"}>
               회원가입

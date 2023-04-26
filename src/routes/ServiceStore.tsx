@@ -74,7 +74,6 @@ const Map: React.FC = () => {
     } catch (error) {
       data = null;
     }
-
     if (data !== null) {
       const rows = data.allMenu.filter(
         (menu: TMainDataResult) => menu.menuName !== "PlusWin6"
@@ -264,6 +263,7 @@ const Map: React.FC = () => {
               {detailDataResult.preview ? (
                 <img
                   src={`data:image/jpeg;base64,${detailDataResult.preview}`}
+                  style={{maxWidth: "400px", maxHeight: "800px"}}
                   alt="preview"
                 />
               ) : (
@@ -353,6 +353,7 @@ const Menu = ({
           (menu) =>
             menu.menuName.includes(filterText) && (
               <Card
+                style={menu.subscribed == true ? (menu.category == "FORM" ? { backgroundColor: '#9ECBA5', backgroundImage: `url('${process.env.PUBLIC_URL}/earth-icon.png')`, backgroundRepeat: "no-repeat", float: "right", backgroundPosition: "96% 50%", backgroundSize: "auto 70%"} : menu.category == "WEB" ? { backgroundColor: '#9BC2C9', backgroundImage: `url('${process.env.PUBLIC_URL}/windows-icon.png')`, backgroundRepeat: "no-repeat", float: "right", backgroundPosition: "96% 50%", backgroundSize: "auto 70%"}: { backgroundColor: 'white'}) : { backgroundColor: 'white'}}
                 key={menu.menuId}
                 onClick={() => onCardClick(menu.menuId)}
                 className={
@@ -363,9 +364,9 @@ const Menu = ({
               >
                 <CardBody>
                   <p>{menu.menuName}</p>
-                  {menu.subscribed && (
-                    <span className="subscribe-badge">구독중</span>
-                  )}
+                  {/* {menu.subscribed && (
+                    // <span className="subscribe-badge">구독중</span>
+                  )} */}
                 </CardBody>
               </Card>
             )

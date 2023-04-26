@@ -510,30 +510,26 @@ export const FormUpload = (fieldRenderProps: FieldRenderProps) => {
         status: 2,
         uid: "",
       };
+
       setFiles([files]);
       setState(true);
     }
   }, []);
 
-  const b64toBlob = (b64Data: string, contentType = "", sliceSize = 512) => {
-    const byteCharacters = b64Data;
-    const byteArrays = [];
-
-    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-      const slice = byteCharacters.slice(offset, offset + sliceSize);
-
-      const byteNumbers = new Array(slice.length);
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-
-      const byteArray = new Uint8Array(byteNumbers);
-      byteArrays.push(byteArray);
+  function b64toBlob(b64Data: string, contentType = '', sliceSize = 512) {
+    const image_data = atob(b64Data); // data:image/gif;base64 필요없으니 떼주고, base64 인코딩을 풀어준다
+ 
+    const arraybuffer = new ArrayBuffer(image_data.length);
+    const view = new Uint8Array(arraybuffer);
+ 
+    for (let i = 0; i < image_data.length; i++) {
+       view[i] = image_data.charCodeAt(i) & 0xff;
+       // charCodeAt() 메서드는 주어진 인덱스에 대한 UTF-16 코드를 나타내는 0부터 65535 사이의 정수를 반환
+       // 비트연산자 & 와 0xff(255) 값은 숫자를 양수로 표현하기 위한 설정
     }
-
-    const blob = new Blob(byteArrays, { type: contentType });
-    return blob;
-  };
+ 
+    return new Blob([arraybuffer], { type: contentType });
+ }
 
   React.useEffect(() => {
     if (affectedFiles && affectedFiles.getRawFile) {
@@ -560,6 +556,7 @@ export const FormUpload = (fieldRenderProps: FieldRenderProps) => {
   const onRemove = (event: UploadOnRemoveEvent) => {
     setFiles(event.newState);
     setAffectedFiles(event.affectedFiles[0]);
+    fieldRenderProps.onChange({ value: "" });
     setState(false);
   };
 

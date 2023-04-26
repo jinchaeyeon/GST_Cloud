@@ -111,19 +111,36 @@ const Service: React.FC = () => {
       const usageAmountRows = data.usageAmount.Rows.map(
         (item: any, index: number) => ({
           ...item,
-          amount: item.amount == undefined ? 0 : item.amount,
-          increase_attachment:
-            item.increase_attachment == undefined
+          data_cost:
+            item.data_cost == undefined
               ? 0
-              : item.increase_attachment < 0
+              : item.data_cost < 0
               ? 0
-              : item.increase_attachment,
-          increase_data:
-            item.increase_data == undefined
+              : item.data_cost,
+          attachment_cost:
+            item.attachment_cost == undefined
               ? 0
-              : item.increase_data < 0
+              : item.attachment_cost < 0
               ? 0
-              : item.increase_data,
+              : item.attachment_cost,
+          user_cost:
+            item.user_cost == undefined
+              ? 0
+              : item.user_cost < 0
+              ? 0
+              : item.user_cost,
+          menu_cost:
+            item.menu_cost == undefined
+              ? 0
+              : item.menu_cost < 0
+              ? 0
+              : item.menu_cost,
+          menu_count:
+            item.menu_count == undefined
+              ? 0
+              : item.menu_count < 0
+              ? 0
+              : item.menu_count,
           is_paid: item.is_paid == "Y" ? "O" : item.is_paid == "N" ? "X" : "",
           num: index,
         })
@@ -331,6 +348,12 @@ const Service: React.FC = () => {
                         item.num == Object.getOwnPropertyNames(selectedState)[0]
                     )[0] == undefined
                       ? 0
+                      : mainDataResult2.data.filter(
+                          (item: any) =>
+                            item.num ==
+                            Object.getOwnPropertyNames(selectedState)[0]
+                        )[0].is_paid == "O"
+                      ? 0
                       : mainDataResult2.data
                           .filter(
                             (item: any) =>
@@ -378,13 +401,13 @@ const Service: React.FC = () => {
                         item.num == Object.getOwnPropertyNames(selectedState)[0]
                     )[0] == undefined
                       ? 0
-                      : mainDataResult2.data
+                      : (mainDataResult2.data
                           .filter(
                             (item: any) =>
                               item.num ==
                               Object.getOwnPropertyNames(selectedState)[0]
                           )[0]
-                          .increase_data.toLocaleString()}
+                          .data_used_mb/1024).toLocaleString()}
                   </strong>
                   <span>GB</span>
                 </p>
@@ -400,13 +423,13 @@ const Service: React.FC = () => {
                         item.num == Object.getOwnPropertyNames(selectedState)[0]
                     )[0] == undefined
                       ? 0
-                      : mainDataResult2.data
+                      : (mainDataResult2.data
                           .filter(
                             (item: any) =>
                               item.num ==
                               Object.getOwnPropertyNames(selectedState)[0]
                           )[0]
-                          .increase_attachment.toLocaleString()}
+                          .attachment_size_mb/1024).toLocaleString()}
                   </strong>
                   <span>GB</span>
                 </p>
@@ -477,33 +500,33 @@ const Service: React.FC = () => {
                   // footerCell={mainTotalFooterCell}
                 />
                 <GridColumn
-                  field="menu_count"
-                  title="메뉴 개수"
-                  width="80px"
+                  field="data_cost"
+                  title="데이터 사용 비용"
+                  width="130px"
                   cell={NumberCell}
                 />
                 <GridColumn
-                  field="user_count"
-                  title="사용자 수"
-                  width="80px"
+                  field="attachment_cost"
+                  title="첨부 사용 비용"
+                  width="130px"
                   cell={NumberCell}
                 />
                 <GridColumn
-                  field="amount"
+                  field="user_cost"
                   cell={NumberCell}
-                  title="금액"
-                  width="90px"
+                  title="사용자 비용"
+                  width="120px"
                 />
                 <GridColumn
-                  field="increase_data"
-                  title="데이터 사용량"
+                  field="menu_cost"
+                  title="메뉴 비용"
                   width="120px"
                   cell={NumberCell}
                 />
                 <GridColumn
-                  field="increase_attachment"
-                  title="첨부파일 사용량"
-                  width="130px"
+                  field="menu_count"
+                  title="메뉴 수"
+                  width="100px"
                   cell={NumberCell}
                 />
                 <GridColumn
