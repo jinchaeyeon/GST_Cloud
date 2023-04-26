@@ -230,6 +230,7 @@ const MyPage: React.FC = () => {
         para.BusinessCard != ""
       ) {
         setShowLoading(true);
+
         if (typeof para.BusinessLicense != "string") {
           var fileReader = new FileReader();
           fileReader.readAsDataURL(para.BusinessLicense);
@@ -238,6 +239,7 @@ const MyPage: React.FC = () => {
               para.BusinessLicense = e.target.result
                 ?.toString()
                 .split(",")[1];
+              para.BusinessLicense =  b64toBlob(para.BusinessLicense, "image/jpg");
             }
           };
         } else if (typeof para.BusinessLicense == "string" && para.BusinessLicense != ""){
@@ -259,7 +261,7 @@ const MyPage: React.FC = () => {
         } else {
           para.BusinessCard = "";
         }
-   
+
         try {
           data = await processApi<any>("user-info-save", para);
         } catch (e: any) {
