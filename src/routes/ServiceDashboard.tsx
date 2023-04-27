@@ -250,6 +250,24 @@ const Service: React.FC = () => {
     return data;
   };
 
+  const SharedTooltip = (props: any) => {
+    const { points } = props;
+
+    return (
+      <div style={{padding: "10px"}}>
+        <table>
+          {points.map((point: any, i: any) => (
+            <tr>
+              <th key={i} style={{textAlign: "left", paddingRight: "20px"}}>{point.series.name}</th>
+              <td key={i} style={{textAlign: "left", fontWeight: "bolder"}}>{point.value}</td>
+            </tr>
+          ))}
+        </table>
+      </div>
+    );
+  };
+  const sharedTooltipRender = (context: any) => <SharedTooltip {...context} />;
+
   return (
     <>
       <TitleContainer>
@@ -296,6 +314,7 @@ const Service: React.FC = () => {
               <GridTitle>서비스 측정</GridTitle>
               <Chart style={{ height: "calc(100% - 35px)" }}>
                 <ChartLegend position="top" orientation="horizontal" />
+                <ChartTooltip shared={true} render={sharedTooltipRender} background="#F3F3F3"/>
                 <ChartCategoryAxis>
                   <ChartCategoryAxisItem
                     title={{ text: "월별 측정" }}
@@ -307,26 +326,22 @@ const Service: React.FC = () => {
                     type="area"
                     data={usercount}
                     name="사용자 수"
-                  >
-                    <ChartSeriesItemTooltip />
-                  </ChartSeriesItem>
-                  <ChartSeriesItem type="area" data={menucount} name="메뉴 수">
-                    <ChartSeriesItemTooltip />{" "}
-                  </ChartSeriesItem>
+                  />
+                  <ChartSeriesItem
+                    type="area"
+                    data={menucount}
+                    name="메뉴 수"
+                  />
                   <ChartSeriesItem
                     type="area"
                     data={datausedmb}
                     name="데이터 사용량"
-                  >
-                    <ChartSeriesItemTooltip />
-                  </ChartSeriesItem>
+                  />
                   <ChartSeriesItem
                     type="area"
                     data={attachmentsizemb}
                     name="첨부 사용량"
-                  >
-                    <ChartSeriesItemTooltip />
-                  </ChartSeriesItem>
+                  />
                 </ChartSeries>
               </Chart>
             </GridContainer>
@@ -423,13 +438,13 @@ const Service: React.FC = () => {
                         item.num == Object.getOwnPropertyNames(selectedState)[0]
                     )[0] == undefined
                       ? 0
-                      : (mainDataResult2.data
-                          .filter(
+                      : (
+                          mainDataResult2.data.filter(
                             (item: any) =>
                               item.num ==
                               Object.getOwnPropertyNames(selectedState)[0]
-                          )[0]
-                          .data_used_mb/1024).toLocaleString()}
+                          )[0].data_used_mb / 1024
+                        ).toLocaleString()}
                   </strong>
                   <span>GB</span>
                 </p>
@@ -445,13 +460,13 @@ const Service: React.FC = () => {
                         item.num == Object.getOwnPropertyNames(selectedState)[0]
                     )[0] == undefined
                       ? 0
-                      : (mainDataResult2.data
-                          .filter(
+                      : (
+                          mainDataResult2.data.filter(
                             (item: any) =>
                               item.num ==
                               Object.getOwnPropertyNames(selectedState)[0]
-                          )[0]
-                          .attachment_size_mb/1024).toLocaleString()}
+                          )[0].attachment_size_mb / 1024
+                        ).toLocaleString()}
                   </strong>
                   <span>GB</span>
                 </p>
