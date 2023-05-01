@@ -271,7 +271,7 @@ const Map: React.FC = () => {
             <p>{detailDataResult.description}</p>
             <HashtagConatiner>
               {detailDataResult.hashtag.map((tag) => (
-                <div key={tag}>{tag}</div>
+                <div style={{ marginBottom: "20px" }} key={tag}>{tag}</div>
               ))}
             </HashtagConatiner>
             <div className="preview">
