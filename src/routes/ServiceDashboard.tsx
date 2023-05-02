@@ -191,8 +191,9 @@ const Service: React.FC = () => {
       });
 
       const firstRowData = usageAmountRows[0];
-
-      setSelectedState({ [firstRowData[DATA_ITEM_KEY]]: true });
+      if(firstRowData != undefined) {
+        setSelectedState({ [firstRowData[DATA_ITEM_KEY]]: true });
+      }
     } else {
       console.log("[에러발생]");
       console.log(data);
