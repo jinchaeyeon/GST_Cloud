@@ -40,6 +40,7 @@ type TDetailDataResult = {
   price: string;
   description: string;
   preview: any;
+  isBasic: boolean;
   hashtag: string[];
   manualExists: boolean;
 } | null;
@@ -271,7 +272,9 @@ const Map: React.FC = () => {
             <p>{detailDataResult.description}</p>
             <HashtagConatiner>
               {detailDataResult.hashtag.map((tag) => (
-                <div style={{ marginBottom: "20px" }} key={tag}>{tag}</div>
+                <div style={{ marginBottom: "20px" }} key={tag}>
+                  {tag}
+                </div>
               ))}
             </HashtagConatiner>
             <div className="preview">
@@ -296,27 +299,33 @@ const Map: React.FC = () => {
             </Button>
           </div>
           <div>
-            {!detailDataResult.subscribed && (
+            {detailDataResult.isBasic ? (
+              <p className="basic-package">기본 패키지</p>
+            ) : (
               <>
-                <del className="org-amt">
-                  정가{" "}
-                  {numberWithCommas(
-                    detailDataResult.price
-                      ? Number(detailDataResult.price)
-                      : 6000
-                  )}
-                  원
-                </del>
-                <p className="amt">
-                  <span>할인가</span> 월
-                  {numberWithCommas(
-                    (detailDataResult.price
-                      ? Number(detailDataResult.price)
-                      : 6000) *
-                      ((100 - 30) / 100)
-                  )}
-                  원
-                </p>
+                {!detailDataResult.subscribed && (
+                  <>
+                    <del className="org-amt">
+                      정가{" "}
+                      {numberWithCommas(
+                        detailDataResult.price
+                          ? Number(detailDataResult.price)
+                          : 6000
+                      )}
+                      원
+                    </del>
+                    <p className="amt">
+                      <span>할인가</span> 월
+                      {numberWithCommas(
+                        (detailDataResult.price
+                          ? Number(detailDataResult.price)
+                          : 6000) *
+                          ((100 - 30) / 100)
+                      )}
+                      원
+                    </p>
+                  </>
+                )}
               </>
             )}
             {detailDataResult.subscribed ? (
@@ -373,35 +382,35 @@ const Menu = ({
             (filterToggle ? menu.subscribed : true) && (
               <Card
                 style={
-                    menu.category == "FORM"
-                      ? {
-                          border: "2px solid #ace394",
-                          backgroundImage: `linear-gradient(
+                  menu.category == "FORM"
+                    ? {
+                        border: "2px solid #ace394",
+                        backgroundImage: `linear-gradient(
                         rgba(255, 255, 255, 0.5),
                         rgba(255, 255, 255, 0.5)
                       ), url('${process.env.PUBLIC_URL}/windows-icon.png')`,
-                          backgroundRepeat: "no-repeat",
-                          float: "right",
-                          backgroundPosition: "108% -200%",
-                          backgroundSize: "auto 110%",
-                          width: "240px",
-                          height: "60px"
-                        }
-                      : menu.category == "WEB"
-                      ? {
-                          border: "2px solid #9BC2C9",
-                          backgroundImage: `linear-gradient(
+                        backgroundRepeat: "no-repeat",
+                        float: "right",
+                        backgroundPosition: "108% -200%",
+                        backgroundSize: "auto 110%",
+                        width: "240px",
+                        height: "60px",
+                      }
+                    : menu.category == "WEB"
+                    ? {
+                        border: "2px solid #9BC2C9",
+                        backgroundImage: `linear-gradient(
                         rgba(255, 255, 255, 0.5),
                         rgba(255, 255, 255, 0.5)
                       ), url('${process.env.PUBLIC_URL}/earth-icon.png')`,
-                          backgroundRepeat: "no-repeat",
-                          float: "right",
-                          backgroundPosition: "112% -100%",
-                          backgroundSize: "auto 120%",
-                          width: "240px",
-                          height: "60px"
-                        }
-                      : { backgroundColor: "white" }
+                        backgroundRepeat: "no-repeat",
+                        float: "right",
+                        backgroundPosition: "112% -100%",
+                        backgroundSize: "auto 120%",
+                        width: "240px",
+                        height: "60px",
+                      }
+                    : { backgroundColor: "white" }
                 }
                 key={menu.menuId}
                 onClick={() => onCardClick(menu.menuId)}
