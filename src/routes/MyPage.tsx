@@ -154,7 +154,10 @@ const MyPage: React.FC = () => {
                   .split(",")[1];
               }
             };
-          } else if (typeof para.BusinessLicense == "string" && para.BusinessLicense != ""){
+          } else if (
+            typeof para.BusinessLicense == "string" &&
+            para.BusinessLicense != ""
+          ) {
             para.BusinessLicense = b64toBlob(businessLicense, "image/jpg");
           } else {
             para.BusinessLicense = "";
@@ -168,7 +171,10 @@ const MyPage: React.FC = () => {
                 para.BusinessCard = e.target.result?.toString().split(",")[1];
               }
             };
-          } else if (typeof para.BusinessCard == "string" && para.BusinessCard != ""){
+          } else if (
+            typeof para.BusinessCard == "string" &&
+            para.BusinessCard != ""
+          ) {
             para.BusinessCard = b64toBlob(businessCard, "image/jpg");
           } else {
             para.BusinessCard = "";
@@ -193,20 +199,20 @@ const MyPage: React.FC = () => {
     []
   );
 
-  function b64toBlob(b64Data: string, contentType = '', sliceSize = 512) {
+  function b64toBlob(b64Data: string, contentType = "", sliceSize = 512) {
     const image_data = atob(b64Data); // data:image/gif;base64 필요없으니 떼주고, base64 인코딩을 풀어준다
- 
+
     const arraybuffer = new ArrayBuffer(image_data.length);
     const view = new Uint8Array(arraybuffer);
- 
+
     for (let i = 0; i < image_data.length; i++) {
-       view[i] = image_data.charCodeAt(i) & 0xff;
-       // charCodeAt() 메서드는 주어진 인덱스에 대한 UTF-16 코드를 나타내는 0부터 65535 사이의 정수를 반환
-       // 비트연산자 & 와 0xff(255) 값은 숫자를 양수로 표현하기 위한 설정
+      view[i] = image_data.charCodeAt(i) & 0xff;
+      // charCodeAt() 메서드는 주어진 인덱스에 대한 UTF-16 코드를 나타내는 0부터 65535 사이의 정수를 반환
+      // 비트연산자 & 와 0xff(255) 값은 숫자를 양수로 표현하기 위한 설정
     }
- 
+
     return new Blob([arraybuffer], { type: contentType });
- }
+  }
 
   const processBiz = useCallback(async (formData: { [name: string]: any }) => {
     let para = Object.assign({}, formData);
@@ -236,13 +242,17 @@ const MyPage: React.FC = () => {
           fileReader.readAsDataURL(para.BusinessLicense);
           fileReader.onload = function (e) {
             if (e.target != null) {
-              para.BusinessLicense = e.target.result
-                ?.toString()
-                .split(",")[1];
-              para.BusinessLicense =  b64toBlob(para.BusinessLicense, "image/jpg");
+              para.BusinessLicense = e.target.result?.toString().split(",")[1];
+              para.BusinessLicense = b64toBlob(
+                para.BusinessLicense,
+                "image/jpg"
+              );
             }
           };
-        } else if (typeof para.BusinessLicense == "string" && para.BusinessLicense != ""){
+        } else if (
+          typeof para.BusinessLicense == "string" &&
+          para.BusinessLicense != ""
+        ) {
           para.BusinessLicense = b64toBlob(businessLicense, "image/jpg");
         } else {
           para.BusinessLicense = "";
@@ -256,7 +266,10 @@ const MyPage: React.FC = () => {
               para.BusinessCard = e.target.result?.toString().split(",")[1];
             }
           };
-        } else if (typeof para.BusinessCard == "string" && para.BusinessCard != ""){
+        } else if (
+          typeof para.BusinessCard == "string" &&
+          para.BusinessCard != ""
+        ) {
           para.BusinessCard = b64toBlob(businessCard, "image/jpg");
         } else {
           para.BusinessCard = "";
@@ -282,7 +295,7 @@ const MyPage: React.FC = () => {
             alert(e.message);
           }
         }
-        
+
         if (data != null) {
           alert("승인 요청이 완료되었습니다.");
           setState(1);
@@ -389,6 +402,9 @@ const MyPage: React.FC = () => {
           BusinessLicense: initialVal.businessLicense,
           BusinessCard: initialVal.businessCard,
           BusinessAddress: initialVal.businessAddress,
+          approvalDate: initialVal.approvalDate,
+          companyCode: initialVal.companyCode,
+          requestDate: initialVal.requestDate,
           Bus_yn: initialVal.bizyn,
         }}
         onSubmit={onSubmit}
@@ -538,6 +554,28 @@ const MyPage: React.FC = () => {
               >
                 기업 승인 요청 취소
               </Button>
+            ) : (
+              ""
+            )}
+            {state == 2 ? (
+              <div>
+                <hr />
+                <h2>승인정보</h2>
+                <FieldWrap fieldWidth="50%">
+                  <Field
+                    name={"approvalDate"}
+                    label={"승인일"}
+                    component={FormReadOnly}
+                    className="readonly"
+                  />
+                  <Field
+                    name={"companyCode"}
+                    label={"회사코드"}
+                    component={FormReadOnly}
+                    className="readonly"
+                  />
+                </FieldWrap>
+              </div>
             ) : (
               ""
             )}
