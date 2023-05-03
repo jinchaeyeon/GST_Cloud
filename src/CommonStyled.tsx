@@ -894,6 +894,13 @@ export const DetailBox = styled.div`
     padding: 0;
   }
 
+  .basic-package {
+    clear: both;
+    text-align: right;
+    font-size: 34px;
+    font-weight: 900;
+    line-height: normal;
+  }
   .org-amt {
     float: right;
     color: gray;
