@@ -497,16 +497,16 @@ const MyPage: React.FC = () => {
                 disabled={state == 0 ? false : true}
               />
               <Field
-                name={"BusinessAddress"}
-                label={"회사주소"}
+                name={"BusinessType"}
+                label={"업종"}
                 component={FormInput}
                 disabled={state == 0 ? false : true}
               />
             </FieldWrap>
             <FieldWrap fieldWidth="100%" className="full-form-field">
               <Field
-                name={"BusinessType"}
-                label={"업종"}
+                name={"BusinessAddress"}
+                label={"회사주소"}
                 component={FormInput}
                 disabled={state == 0 ? false : true}
               />

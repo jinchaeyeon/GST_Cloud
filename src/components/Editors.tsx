@@ -542,13 +542,17 @@ export const FormUpload = (fieldRenderProps: FieldRenderProps) => {
   };
 
   const onAdd = (event: UploadOnAddEvent) => {
-    if(event.newState[0].extension != undefined) {
-      if([".jpg", ".png"].includes(event.newState[0].extension) == true) {
-        setFiles(event.newState);
-        setAffectedFiles(event.affectedFiles[0]);
-        setState(true);
+    if(event.newState[0].extension != undefined && event.newState[0].size != undefined) {
+      if(event.newState[0].size > 2000000) {
+        alert("파일 크기가 초과되었습니다.");
       } else {
-        alert("jpg, png 형식이 아닙니다.");
+        if([".jpg", ".png"].includes(event.newState[0].extension) == true) {
+          setFiles(event.newState);
+          setAffectedFiles(event.affectedFiles[0]);
+          setState(true);
+        } else {
+          alert("jpg, png 형식이 아닙니다.");
+        }
       }
     }
   };
