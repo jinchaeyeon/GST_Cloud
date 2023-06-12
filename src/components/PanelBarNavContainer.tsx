@@ -49,6 +49,10 @@ const PanelBarNavContainer = (props: any) => {
       path: "/MyPage",
       index: ".2",
     },
+    {
+      path: "/CustomerService",
+      index: ".3",
+    },
   ];
 
   const [userOptionsWindowVisible, setUserOptionsWindowVisible] =
@@ -103,6 +107,10 @@ const PanelBarNavContainer = (props: any) => {
             route="/ServiceStore"
           ></PanelBarItem>
           <PanelBarItem title={"마이 페이지"} route="/MyPage"></PanelBarItem>
+          <PanelBarItem
+            title={"고객지원센터"}
+            route="/CustomerService"
+          ></PanelBarItem>
         </PanelBar>
 
         <Button

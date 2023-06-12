@@ -1126,3 +1126,114 @@ export const TopInfo = styled.div`
     display: none;
   }
 `;
+export const CustomerServiceContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 130px;
+  font-size: 24px;
+  h2 {
+    font-size: 32px;
+    margin-bottom: 30px;
+  }
+  .main_company_info_item {
+    width: 1200px;
+    margin: 0 auto;
+    margin-top: 50px;
+    clear: both;
+    overflow: hidden;
+    border-top: 2px solid #2489c4;
+    border-right: 1px solid #dfdfdf;
+    border-bottom: 1px solid #dfdfdf;
+    border-left: 1px solid #dfdfdf;
+    background-color: #fff;
+  }
+  .main_company_info_item .title_wrap {
+    float: left;
+    width: 320px;
+    margin: 200px 60px;
+    border-right: 1px solid #dfdfdf;
+  }
+  .main_company_info_item .title_wrap .title {
+    padding-bottom: 15px;
+    letter-spacing: 2px;
+    font-size: 26px;
+    font-weight: 600;
+  }
+  .main_company_info_item .title_wrap .desc {
+    letter-spacing: -1px;
+    font-size: 16px;
+    font-weight: 100;
+  }
+  .main_company_info_item .address_info {
+    float: left;
+    width: 750px;
+    padding: 50px 60px 0 0;
+  }
+  .main_company_info_item .address_info span {
+    display: block;
+    font-size: 24px;
+  }
+
+  .main_company_info_item .address_info .title {
+    background-color: #2489c4;
+    padding: 10px;
+    color: #fff;
+    padding: 10px;
+    font-size: 18px;
+    width: 125px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .main_company_info_item .address_info .content {
+    color: #000000;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .main_company_info_item .customer_info {
+    float: left;
+    width: 750px;
+    padding: 100px 60px 0 0;
+  }
+  .main_company_info_item .customer_info span {
+    display: inline-block;
+    font-size: 24px;
+  }
+  .main_company_info_item .customer_info .tel {
+    color: #2489c4;
+    font-weight: 800;
+  }
+
+  .main_company_info_item .customer_info .desc {
+    padding-top: 10px;
+    font-weight: 100;
+    font-size: 20px;
+  }
+  .main_company_info_item .customer_info > .unit {
+    padding: 0 10px;
+    font-weight: 100;
+    font-family: "Noto Sans KR", "dotum", sans-serif;
+    font-size: 22px;
+    color: #ccc;
+  }
+  .main_company_info_item .customer_info .desc .unit {
+    padding: 0 10px;
+    color: #ccc;
+    font-size: 18px;
+  }
+
+  @media (max-width: 768px) {
+    .main_company_info_item {
+      width: 100%;
+    }
+    .main_company_info_item .title_wrap {
+      display: none;
+    }
+    .main_company_info_item .address_info,
+    .main_company_info_item .customer_info {
+      width: 100%;
+      padding: 20px;
+    }
+  }
+`;

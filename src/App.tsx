@@ -11,6 +11,7 @@ import ServiceStore from "./routes/ServiceStore";
 import ServiceDashboard from "./routes/ServiceDashboard";
 import SignUp from "./routes/SignUp";
 import MyPage from "./routes/MyPage";
+import CustomerService from "./routes/CustomerService";
 import "./index.scss";
 
 type TGlobalStyle = {
@@ -167,6 +168,11 @@ const AppInner: React.FC = () => {
             <AuthRoute
               path="/ServiceDashboard"
               component={ServiceDashboard}
+              exact
+            />
+            <AuthRoute
+              path="/CustomerService"
+              component={CustomerService}
               exact
             />
           </PanelBarNavContainer>
