@@ -53,6 +53,10 @@ const PanelBarNavContainer = (props: any) => {
       path: "/CustomerService",
       index: ".3",
     },
+    {
+      path: "/BusinessSignUp",
+      index: ".4",
+    },
   ];
 
   const [userOptionsWindowVisible, setUserOptionsWindowVisible] =
@@ -110,6 +114,10 @@ const PanelBarNavContainer = (props: any) => {
           <PanelBarItem
             title={"고객지원센터"}
             route="/CustomerService"
+          ></PanelBarItem>
+           <PanelBarItem
+            title={"기업용 계정 신청"}
+            route="/BusinessSignUp"
           ></PanelBarItem>
         </PanelBar>
 

@@ -119,15 +119,6 @@ const MyPage: React.FC = () => {
       } else if (para.Password != para.PasswordConfirm) {
         alert("비밀번호가 맞지 않습니다.");
       } else {
-        if (
-          para.CompanyName == "" &&
-          para.BusinessNumber == "" &&
-          para.BusinessOwner == "" &&
-          para.BusinessAddress == "" &&
-          para.BusinessType == "" &&
-          para.BusinessLicense == "" &&
-          para.BusinessCard == ""
-        ) {
           setShowLoading(true);
           try {
             data = await processApi<any>("user-info-save", para);
@@ -142,77 +133,10 @@ const MyPage: React.FC = () => {
             fetchUser();
           }
           setShowLoading(false);
-        } else {
-          setShowLoading(true);
-          if (typeof para.BusinessLicense != "string") {
-            var fileReader = new FileReader();
-            fileReader.readAsDataURL(para.BusinessLicense);
-            fileReader.onload = function (e) {
-              if (e.target != null) {
-                para.BusinessLicense = e.target.result
-                  ?.toString()
-                  .split(",")[1];
-              }
-            };
-          } else if (
-            typeof para.BusinessLicense == "string" &&
-            para.BusinessLicense != ""
-          ) {
-            para.BusinessLicense = b64toBlob(businessLicense, "image/jpg");
-          } else {
-            para.BusinessLicense = "";
-          }
-
-          if (typeof para.BusinessCard != "string") {
-            var fileReader = new FileReader();
-            fileReader.readAsDataURL(para.BusinessCard);
-            fileReader.onload = function (e) {
-              if (e.target != null) {
-                para.BusinessCard = e.target.result?.toString().split(",")[1];
-              }
-            };
-          } else if (
-            typeof para.BusinessCard == "string" &&
-            para.BusinessCard != ""
-          ) {
-            para.BusinessCard = b64toBlob(businessCard, "image/jpg");
-          } else {
-            para.BusinessCard = "";
-          }
-
-          try {
-            data = await processApi<any>("user-info-save", para);
-          } catch (e: any) {
-            data = null;
-            console.log("MyPage error", e);
-            //setShowLoading(false);
-            alert(e.message);
-          }
-          setShowLoading(false);
-          if (data != null) {
-            alert("수정이 완료되었습니다.");
-            fetchUser();
-          }
-        }
       }
     },
     []
   );
-
-  function b64toBlob(b64Data: string, contentType = "", sliceSize = 512) {
-    const image_data = atob(b64Data); // data:image/gif;base64 필요없으니 떼주고, base64 인코딩을 풀어준다
-
-    const arraybuffer = new ArrayBuffer(image_data.length);
-    const view = new Uint8Array(arraybuffer);
-
-    for (let i = 0; i < image_data.length; i++) {
-      view[i] = image_data.charCodeAt(i) & 0xff;
-      // charCodeAt() 메서드는 주어진 인덱스에 대한 UTF-16 코드를 나타내는 0부터 65535 사이의 정수를 반환
-      // 비트연산자 & 와 0xff(255) 값은 숫자를 양수로 표현하기 위한 설정
-    }
-
-    return new Blob([arraybuffer], { type: contentType });
-  }
 
   const processBiz = useCallback(async (formData: { [name: string]: any }) => {
     let para = Object.assign({}, formData);
@@ -220,91 +144,40 @@ const MyPage: React.FC = () => {
     if (
       para.UserName == undefined ||
       para.UserId == undefined ||
-      para.Email == undefined
+      para.Email == undefined ||
+      para.phoneNumber == undefined
     ) {
       alert("사용자 정보를 입력해주세요.");
     } else if (para.Password != para.PasswordConfirm) {
       alert("비밀번호가 맞지 않습니다.");
     } else {
-      if (
-        para.CompanyName != "" &&
-        para.BusinessNumber != "" &&
-        para.BusinessOwner != "" &&
-        para.BusinessAddress != "" &&
-        para.BusinessType != "" &&
-        para.BusinessLicense != "" &&
-        para.BusinessCard != ""
-      ) {
-        setShowLoading(true);
+      try {
+        data = await processApi<any>("user-info-save", para);
+      } catch (e: any) {
+        data = null;
+        console.log("MyPage error", e);
+        //setShowLoading(false);
+        alert(e.message);
+      }
 
-        if (typeof para.BusinessLicense != "string") {
-          var fileReader = new FileReader();
-          fileReader.readAsDataURL(para.BusinessLicense);
-          fileReader.onload = function (e) {
-            if (e.target != null) {
-              para.BusinessLicense = e.target.result?.toString().split(",")[1];
-              para.BusinessLicense = b64toBlob(
-                para.BusinessLicense,
-                "image/jpg"
-              );
-            }
-          };
-        } else if (
-          typeof para.BusinessLicense == "string" &&
-          para.BusinessLicense != ""
-        ) {
-          para.BusinessLicense = b64toBlob(businessLicense, "image/jpg");
-        } else {
-          para.BusinessLicense = "";
-        }
-
-        if (typeof para.BusinessCard != "string") {
-          var fileReader = new FileReader();
-          fileReader.readAsDataURL(para.BusinessCard);
-          fileReader.onload = function (e) {
-            if (e.target != null) {
-              para.BusinessCard = e.target.result?.toString().split(",")[1];
-            }
-          };
-        } else if (
-          typeof para.BusinessCard == "string" &&
-          para.BusinessCard != ""
-        ) {
-          para.BusinessCard = b64toBlob(businessCard, "image/jpg");
-        } else {
-          para.BusinessCard = "";
-        }
-
+      if (data != null) {
+        data = [];
         try {
-          data = await processApi<any>("user-info-save", para);
+          data = await processApi<any>("user-approval-request", para);
         } catch (e: any) {
           data = null;
           console.log("MyPage error", e);
           //setShowLoading(false);
           alert(e.message);
         }
-
-        if (data != null) {
-          data = [];
-          try {
-            data = await processApi<any>("user-approval-request", para);
-          } catch (e: any) {
-            data = null;
-            console.log("MyPage error", e);
-            //setShowLoading(false);
-            alert(e.message);
-          }
-        }
-
-        if (data != null) {
-          alert("승인 요청이 완료되었습니다.");
-          setState(1);
-          fetchUser();
-        }
-        setShowLoading(false);
-      } else {
-        alert("회사 정보를 채워주세요.");
       }
+
+      if (data != null) {
+        alert("승인 요청이 완료되었습니다.");
+        setState(1);
+        fetchUser();
+      }
+      setShowLoading(false);
     }
   }, []);
 
@@ -371,14 +244,6 @@ const MyPage: React.FC = () => {
     setToken(null as any);
     setMenus(null as any);
     history.replace("/ServiceDashboard");
-  };
-
-  const processBizCancel = async () => {
-    if (!window.confirm("승인 취소하시겠습니까?")) {
-      return false;
-    }
-    const response = await processApi<any>("user-approval-request-delete");
-    fetchUser();
   };
 
   const emailValidator = (value: string) =>
@@ -473,112 +338,24 @@ const MyPage: React.FC = () => {
                 validator={emailValidator}
               />
             </FieldWrap>
-            <hr />
-            <h2>회사 정보 (선택사항)</h2>
-            <FieldWrap fieldWidth="50%">
-              <Field
-                name={"CompanyName"}
-                label={"회사명"}
-                component={FormInput}
-                disabled={state == 0 ? false : true}
-              />
-              <Field
-                name={"BusinessNumber"}
-                label={"사업자 등록 번호"}
-                component={FormInput}
-                disabled={state == 0 ? false : true}
-              />
-            </FieldWrap>
-            <FieldWrap fieldWidth="50%">
-              <Field
-                name={"BusinessOwner"}
-                label={"대표자명"}
-                component={FormInput}
-                disabled={state == 0 ? false : true}
-              />
-              <Field
-                name={"BusinessType"}
-                label={"업종"}
-                component={FormInput}
-                disabled={state == 0 ? false : true}
-              />
-            </FieldWrap>
-            <FieldWrap fieldWidth="100%" className="full-form-field">
-              <Field
-                name={"BusinessAddress"}
-                label={"회사주소"}
-                component={FormInput}
-                disabled={state == 0 ? false : true}
-              />
-            </FieldWrap>
-            <FieldWrap fieldWidth="100%" className="full-form-field">
-              <Field
-                name={"BusinessLicense"}
-                label={"사업자등록증"}
-                component={FormUpload}
-                disabled={state == 0 ? false : true}
-              />
-            </FieldWrap>
-            <FieldWrap fieldWidth="100%" className="full-form-field">
-              <Field
-                name={"BusinessCard"}
-                label={"명함"}
-                component={FormUpload}
-                disabled={state == 0 ? false : true}
-              />
-            </FieldWrap>
-            {state == 0 ? (
-              <div className="term-checkbox-container">
+            <div>
+              <hr />
+              <h2>기업용 승인정보</h2>
+              <FieldWrap fieldWidth="50%">
                 <Field
-                  id={"Bus_yn"}
-                  name={"Bus_yn"}
-                  label={"기업정보 이용 동의"}
-                  component={FormCheckbox}
+                  name={"approvalDate"}
+                  label={"승인일"}
+                  component={FormReadOnly}
+                  className="readonly"
                 />
                 <Field
-                  id={"Bus_OK_yn"}
-                  name={"Bus_OK_yn"}
-                  label={"기업 승인 요청"}
-                  component={FormCheckbox}
-                  // validator={termsValidator}
+                  name={"companyCode"}
+                  label={"회사코드"}
+                  component={FormReadOnly}
+                  className="readonly"
                 />
-              </div>
-            ) : state == 1 ? (
-              <Button
-                className="sign-out-btn"
-                type="button"
-                themeColor={"primary"}
-                fillMode="outline"
-                onClick={processBizCancel}
-                style={{ width: "100%", marginTop: "30px", height: "50px" }}
-              >
-                기업 승인 요청 취소
-              </Button>
-            ) : (
-              ""
-            )}
-            {state == 2 ? (
-              <div>
-                <hr />
-                <h2>승인정보</h2>
-                <FieldWrap fieldWidth="50%">
-                  <Field
-                    name={"approvalDate"}
-                    label={"승인일"}
-                    component={FormReadOnly}
-                    className="readonly"
-                  />
-                  <Field
-                    name={"companyCode"}
-                    label={"회사코드"}
-                    component={FormReadOnly}
-                    className="readonly"
-                  />
-                </FieldWrap>
-              </div>
-            ) : (
-              ""
-            )}
+              </FieldWrap>
+            </div>
             <Button className="sign-up-btn" themeColor={"primary"}>
               저장
             </Button>

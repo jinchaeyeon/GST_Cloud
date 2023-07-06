@@ -13,6 +13,7 @@ import SignUp from "./routes/SignUp";
 import MyPage from "./routes/MyPage";
 import CustomerService from "./routes/CustomerService";
 import "./index.scss";
+import BusinessSignUp from "./routes/BusinessSignUp";
 
 type TGlobalStyle = {
   isMenuOpend: boolean;
@@ -173,6 +174,11 @@ const AppInner: React.FC = () => {
             <AuthRoute
               path="/CustomerService"
               component={CustomerService}
+              exact
+            />
+            <AuthRoute
+              path="/BusinessSignUp"
+              component={BusinessSignUp}
               exact
             />
           </PanelBarNavContainer>

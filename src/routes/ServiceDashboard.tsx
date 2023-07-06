@@ -191,7 +191,7 @@ const Service: React.FC = () => {
       });
 
       const firstRowData = usageAmountRows[0];
-      if(firstRowData != undefined) {
+      if (firstRowData != undefined) {
         setSelectedState({ [firstRowData[DATA_ITEM_KEY]]: true });
       }
     } else {
@@ -255,12 +255,16 @@ const Service: React.FC = () => {
     const { points } = props;
 
     return (
-      <div style={{padding: "10px"}}>
+      <div style={{ padding: "10px" }}>
         <table>
           {points.map((point: any, i: any) => (
             <tr>
-              <th key={i} style={{textAlign: "left", paddingRight: "20px"}}>{point.series.name}</th>
-              <td key={i} style={{textAlign: "left", fontWeight: "bolder"}}>{point.value}</td>
+              <th key={i} style={{ textAlign: "left", paddingRight: "20px" }}>
+                {point.series.name}
+              </th>
+              <td key={i} style={{ textAlign: "left", fontWeight: "bolder" }}>
+                {point.value}
+              </td>
             </tr>
           ))}
         </table>
@@ -315,7 +319,11 @@ const Service: React.FC = () => {
               <GridTitle>서비스 측정</GridTitle>
               <Chart style={{ height: "calc(100% - 35px)" }}>
                 <ChartLegend position="top" orientation="horizontal" />
-                <ChartTooltip shared={true} render={sharedTooltipRender} background="#F3F3F3"/>
+                <ChartTooltip
+                  shared={true}
+                  render={sharedTooltipRender}
+                  background="#F3F3F3"
+                />
                 <ChartCategoryAxis>
                   <ChartCategoryAxisItem
                     title={{ text: "월별 측정" }}
@@ -535,7 +543,13 @@ const Service: React.FC = () => {
                   field="date"
                   title="월"
                   width="60px"
-                  // footerCell={mainTotalFooterCell}
+                  cell={CenterCell}
+                />
+                <GridColumn
+                  field="basic_cost"
+                  title="기본 패키지"
+                  width="100px"
+                  cell={NumberCell}
                 />
                 <GridColumn
                   field="data_cost"

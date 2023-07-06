@@ -103,7 +103,7 @@ export const useApi = () => {
   const [token, setToken] = useRecoilState(tokenState);
   const [menus, setMenus] = useRecoilState(menusState);
 
-  const processApi = <T>(name: string, params: any = null): Promise<T> => {
+  const processApi = <T>(name: string, params: any = null, value: string = ""): Promise<T> => {
     return new Promise((resolve, reject) => {
       // 로그인 시 반환된 url로 api 호출하도록 함 (22.12.02 서버에서 처리 되도록 방식 변경)
       // if (token) {
@@ -127,7 +127,10 @@ export const useApi = () => {
           accept: "*/*",
         };
       }
-      if (name === "file-list"|| name === "sign-up" || name === "user-approval-request" || name == "user-info-save"){
+      if (name === "sign-up" || name === "user-approval-request"){
+        headers = { "Content-Type": "multipart/form-data", accept: "*/*", recaptcha: value};
+      }
+      if (name === "file-list" || name == "user-info-save"){
         headers = { "Content-Type": "multipart/form-data", accept: "*/*" };
       }
 
