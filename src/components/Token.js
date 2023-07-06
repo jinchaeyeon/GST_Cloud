@@ -1,5 +1,6 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
+import { Button } from "@progress/kendo-react-buttons";
 
 export default function Token(props) {
   const captchaRef = useRef(null);
@@ -15,30 +16,18 @@ export default function Token(props) {
     );
   };
 
-  const callApi = () => {
-    const token = captchaRef.current.getValue();
-    props.propFunction(token, true);
-  };
+  useEffect(() => {
+    if(captchaRef != null) {
+      const token = captchaRef.current.getValue();
+      props.propFunction(token);
+    }
+  })
 
   return (
-    <div style={{ marginTop: "10px" }}>
+    <div style={{ marginTop: "20px" }}>
       <div style={{ margin: "auto", textAlign: "center" }}>
         <div style={{ verticalAlign: "middle", display: "inline-block" }}>
           {Captcha()}
-        </div>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <button onClick={() => callApi()} type={"button"}>
-            확인
-          </button>
-          <button
-            onClick={() => {
-              captchaRef.current.reset();
-              props.propFunction("", false);
-            }}
-            type={"button"}
-          >
-            초기화
-          </button>
         </div>
       </div>
     </div>

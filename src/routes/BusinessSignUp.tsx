@@ -32,45 +32,47 @@ const BusinessSignUp: React.FC = () => {
   const processApi = useApi();
   const [state, setState] = useState<number>(0);
   const [value, setValue] = useState<string>("");
-  const [yn, setYn] = useState<boolean>(false);
 
   const handleSubmit = async (data: { [name: string]: FormData }) => {
-    processSignUp(data);
-  };
-
-  const processSignUp = useCallback(
-    async (formData: { [name: string]: any }) => {
-      let para = Object.assign({}, formData);
-      let data: any;
-      if (para.Bus_yn != undefined) {
-        setShowLoading(true);
-        if (para.BusinessLicense != undefined) {
-          var fileReader = new FileReader();
-          fileReader.readAsDataURL(para.BusinessLicense);
-          fileReader.onload = function (e) {
-            if (e.target != null) {
-              para.BusinessLicense = e.target.result?.toString().split(",")[1];
-            }
-          };
-        }
-        setShowLoading(false);
-
+    const datas2 = processSignUp(data);
+    let para = Object.assign({}, datas2);
+    let datas: any;
+    if (para.Bus_yn != undefined && para.Bus_yn != "") {
+      console.log(value);
+      if(value != "") {
         try {
           data = await processApi<any>("user-approval-request", para, value);
         } catch (e: any) {
-          data = true;
+          datas = true;
           console.log("Sign-up error", e);
           //setShowLoading(false);
           alert(e.message);
         }
 
-        if (data != true) {
+        if (datas != true) {
           alert("기업용 계정 신청이 완료되었습니다.");
           window.location.reload();
         }
-      } else {
-        alert("기업정보 이용 동의를 해주세요");
       }
+    } else {
+      alert("기업정보 이용 동의를 해주세요");
+    }
+  };
+
+  const processSignUp = useCallback((formData: { [name: string]: any }) => {
+      setShowLoading(true);
+      let para = Object.assign({}, formData);
+      if (para.BusinessLicense != undefined) {
+        var fileReader = new FileReader();
+        fileReader.readAsDataURL(para.BusinessLicense);
+        fileReader.onload = function (e) {
+          if (e.target != null) {
+            para.BusinessLicense = e.target.result?.toString().split(",")[1];
+          }
+        };
+      }
+      setShowLoading(false);
+      return para;
     },
     []
   );
@@ -80,7 +82,6 @@ const BusinessSignUp: React.FC = () => {
     yn: boolean | ((prevState: boolean) => boolean)
   ) => {
     setValue(text);
-    setYn(yn);
   };
 
   const [initialVal, setInitialVal] = useState({
@@ -161,7 +162,7 @@ const BusinessSignUp: React.FC = () => {
   };
 
   return (
-    <UserFormBox>
+    <UserFormBox style={{ height: `calc(100vh - 40px)` }}>
       <Form
         onSubmit={handleSubmit}
         render={() =>
@@ -226,25 +227,26 @@ const BusinessSignUp: React.FC = () => {
                   //validator={emailValidator}
                 />
               </FieldWrap>
-              <div className="term-checkbox-container">
-                <Field
-                  id={"Bus_yn"}
-                  name={"Bus_yn"}
-                  label={"기업정보 이용 동의"}
-                  component={FormCheckbox}
-                />
+              <div
+                className="term-checkbox-container"
+                style={{ margin: "0 auto", textAlign: "center" }}
+              >
+                <div style={{ margin: "0 auto", textAlign: "center" }}>
+                  <Field
+                    id={"Bus_yn"}
+                    name={"Bus_yn"}
+                    label={"기업정보 이용 동의"}
+                    component={FormCheckbox}
+                  />
+                </div>
               </div>
               <Token propFunction={highFunction} />
-              {yn == true ? (
-                <Button className="sign-up-btn" themeColor={"primary"}>
-                  기업 계정 신청
-                </Button>
-              ) : (
-                ""
-              )}
+              <Button className="sign-up-btn" themeColor={"primary"}>
+                기업 계정 신청
+              </Button>
             </FormElement>
           ) : state == 1 ? (
-            <FormElement horizontal={true} style={{ marginTop: "25vh" }}>
+            <FormElement horizontal={true}>
               <AppName
                 style={{
                   backgroundSize: 0,
@@ -261,7 +263,7 @@ const BusinessSignUp: React.FC = () => {
                 themeColor={"primary"}
                 fillMode="outline"
                 onClick={processBizCancel}
-                style={{ width: "100%", marginTop: "30px", height: "50px" }}
+                style={{ width: "100%", height: "50px" }}
               >
                 기업 계정 신청 요청 취소
               </Button>
@@ -269,7 +271,7 @@ const BusinessSignUp: React.FC = () => {
           ) : (
             <FormElement
               horizontal={true}
-              style={{ marginTop: "30vh", textAlign: "center" }}
+              style={{ textAlign: "center" }}
             >
               <Icon
                 style={{ marginTop: "40px" }}

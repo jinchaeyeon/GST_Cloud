@@ -250,7 +250,7 @@ const MyPage: React.FC = () => {
     value !== "" ? "" : "Please enter a valid email.";
 
   return (
-    <UserFormBox>
+    <UserFormBox style={{height: `calc(100vh - 40px)`}}>
       <Form
         key={formKey}
         initialValues={{

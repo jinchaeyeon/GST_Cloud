@@ -37,7 +37,7 @@ const SignUp: React.FC = () => {
   const history = useHistory();
   const processApi = useApi();
   const [value, setValue] = useState<string>("");
-  const [yn, setYn] = useState<boolean>(false);
+
   const handleSubmit = async (data: { [name: string]: FormData }) => {
     let para = Object.assign({}, data);
     let datas = false;
@@ -54,7 +54,7 @@ const SignUp: React.FC = () => {
       alert("비밀번호가 맞지 않습니다.");
     } else {
       if (para.User_yn != undefined) {
-        if (yn == true) {
+        if(value != "") {
           try {
             data = await processApi<any>("sign-up", para, value);
           } catch (e: any) {
@@ -68,8 +68,6 @@ const SignUp: React.FC = () => {
             alert("회원가입이 완료되었습니다.");
             history.replace("/");
           }
-        } else {
-          alert("확인 버튼을 눌러주세요.");
         }
       } else {
         alert("개인정보 이용 동의를 해주세요");
@@ -79,10 +77,8 @@ const SignUp: React.FC = () => {
 
   const highFunction = (
     text: SetStateAction<string>,
-    yn: boolean | ((prevState: boolean) => boolean)
   ) => {
     setValue(text);
-    setYn(yn);
   };
 
   const emailValidator = (value: string) =>
@@ -103,7 +99,7 @@ const SignUp: React.FC = () => {
   }, []);
 
   return (
-    <UserFormBox>
+    <UserFormBox style={{height: "100vh"}}>
       <Form
         onSubmit={handleSubmit}
         render={() => (
@@ -168,22 +164,23 @@ const SignUp: React.FC = () => {
                 placeholder={"000-0000-0000"}
               />
             </FieldWrap>
-            <div className="term-checkbox-container">
-              <Field
-                id={"User_yn"}
-                name={"User_yn"}
-                label={"개인정보 이용 동의"}
-                component={FormCheckbox}
-              />
+            <div
+              className="term-checkbox-container"
+              style={{ margin: "0 auto", textAlign: "center" }}
+            >
+              <div style={{ margin: "0 auto", textAlign: "center" }}>
+                <Field
+                  id={"User_yn"}
+                  name={"User_yn"}
+                  label={"개인정보 이용 동의"}
+                  component={FormCheckbox}
+                />
+              </div>
             </div>
             <Token propFunction={highFunction} />
-            {yn == true ? (
               <Button className="sign-up-btn" themeColor={"primary"}>
                 회원가입
               </Button>
-            ) : (
-              ""
-            )}
           </FormElement>
         )}
       ></Form>
