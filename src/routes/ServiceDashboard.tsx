@@ -112,6 +112,12 @@ const Service: React.FC = () => {
       const usageAmountRows = data.usageAmount.Rows.map(
         (item: any, index: number) => ({
           ...item,
+          cloud_cost:
+            item.cloud_cost == undefined
+              ? 0
+              : item.cloud_cost < 0
+              ? 0
+              : item.cloud_cost,
           data_cost:
             item.data_cost == undefined
               ? 0
@@ -544,6 +550,12 @@ const Service: React.FC = () => {
                   title="월"
                   width="60px"
                   cell={CenterCell}
+                />
+                <GridColumn
+                  field="cloud_cost"
+                  title="클라우드 사용료"
+                  width="130px"
+                  cell={NumberCell}
                 />
                 <GridColumn
                   field="basic_cost"
