@@ -312,7 +312,6 @@ const Service: React.FC = () => {
           </UsedMenusBox>
         </GridContainer>
         <GridContainer
-          width="55%"
           style={{
             display: "grid",
             gap: "20px",
@@ -488,6 +487,7 @@ const Service: React.FC = () => {
               </DashboardBox>
             </GridContainer>
           </CssGridContainer>
+          <CssGridContainer gridTemplateColumns="1fr">
           <GridContainerWrap>
             <GridContainer width="50%">
               <GridTitle>모듈별 사용빈도</GridTitle>
@@ -512,10 +512,10 @@ const Service: React.FC = () => {
                 <ChartLegend visible={false} />
               </Chart>
             </GridContainer>
-            <GridContainer width="50%">
+            <GridContainer width='50%'>
               <GridTitle>월별 사용내역</GridTitle>
               <Grid
-                style={{ height: "calc(100% - 35px)" }}
+                style={{ height: "calc(100% - 35px)", width: "100%" }}
                 data={process(
                   mainDataResult2.data.map((row) => ({
                     ...row,
@@ -554,7 +554,7 @@ const Service: React.FC = () => {
                 <GridColumn
                   field="cloud_cost"
                   title="클라우드 사용료"
-                  width="130px"
+                  width="120px"
                   cell={NumberCell}
                 />
                 <GridColumn
@@ -572,7 +572,7 @@ const Service: React.FC = () => {
                 <GridColumn
                   field="attachment_cost"
                   title="첨부 사용 비용"
-                  width="130px"
+                  width="120px"
                   cell={NumberCell}
                 />
                 <GridColumn
@@ -584,13 +584,13 @@ const Service: React.FC = () => {
                 <GridColumn
                   field="menu_cost"
                   title="메뉴 비용"
-                  width="120px"
+                  width="100px"
                   cell={NumberCell}
                 />
                 <GridColumn
                   field="menu_count"
                   title="메뉴 수"
-                  width="100px"
+                  width="80px"
                   cell={NumberCell}
                 />
                 <GridColumn
@@ -602,6 +602,7 @@ const Service: React.FC = () => {
               </Grid>
             </GridContainer>
           </GridContainerWrap>
+          </CssGridContainer>
         </GridContainer>
       </GridContainerWrap>
     </>
