@@ -81,12 +81,12 @@ const Login: React.FC = () => {
                 paddingLeft: "70px",
               }}
             >
-              GST Cloud Store
+              PlusWin-Cloud
             </AppName>
-            <Field name={"userId"} label={"ID"} component={FormInput} />
+            <Field name={"userId"} label={"이메일"} component={FormInput} />
             <Field
               name={"password"}
-              label={"PASSWORD"}
+              label={"비밀번호"}
               type={"password"}
               component={FormInput}
             />
@@ -100,9 +100,6 @@ const Login: React.FC = () => {
                 fillMode={"flat"}
               >
                 회원가입
-              </Button>
-              <Button className="find-idpw" fillMode={"flat"}>
-                ID/PW 찾기
               </Button>
             </div>
           </FormElement>

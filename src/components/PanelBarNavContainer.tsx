@@ -98,7 +98,7 @@ const PanelBarNavContainer = (props: any) => {
     <Wrapper isMenuOpend={isMenuOpend}>
       <Modal isMenuOpend={isMenuOpend} onClick={onMenuBtnClick} />
       <Gnv isMenuOpend={isMenuOpend}>
-        <AppName>Cloud Store</AppName>
+        <AppName>PlusWin-Cloud</AppName>
 
         <PanelBar selected={selected} expandMode={"single"} onSelect={onSelect}>
           {/* <PanelBarItem title={"Home"} route="/Home"></PanelBarItem> */}

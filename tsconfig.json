@@ -2,7 +2,7 @@
   "compileOnSave": true,
   "compilerOptions": {
     "target": "es2016",
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "module": "esnext",
     "sourceMap": true,
     "removeComments": true,
@@ -19,6 +19,6 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["./src/"],
+  "include": ["./src/", "gulpfile.js"],
   "exclude": ["node_modules/*"]
 }

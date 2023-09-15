@@ -74,18 +74,18 @@ export const PageWrap = styled.div`
 
 export const AppName = styled.h1`
   background-image: url("logo192.png");
-  background-size: 20%;
+  background-size: 16%;
   background-position: 15px;
   background-repeat: no-repeat;
   min-width: 170px;
-  font-size: 20px;
+  font-size: 19px;
   font-weight: 400;
   /* padding: 10px 0; */
   height: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-left: 35px;
+  padding-left: 28px;
   color: #fff;
 
   /*=========================================================================
