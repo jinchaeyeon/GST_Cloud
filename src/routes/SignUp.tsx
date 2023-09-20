@@ -48,7 +48,6 @@ const SignUp: React.FC = () => {
         para.UserId == undefined ||
         para.Password == undefined ||
         para.PasswordConfirm == undefined ||
-        para.Email == undefined ||
         para.PhoneNumber == undefined
       ) {
         alert("사용자 정보를 입력해주세요.");
@@ -89,8 +88,14 @@ const SignUp: React.FC = () => {
     setValue(text);
   };
 
-  const emailValidator = (value: string) =>
-    value !== "" ? "" : "Please enter a valid email.";
+    const emailValidator = (value: string) => {
+        let result = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+        if (result.test(value)) {
+          return "";
+        } else {
+          return "Please enter a valid email.";
+       }
+     };
 
   const PhoneNumberValidator = (number: string) => {
     let result = /^(01[016789]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
@@ -116,25 +121,23 @@ const SignUp: React.FC = () => {
               style={{
                 backgroundSize: 0,
                 padding: 0,
-                marginBottom: "40px",
+                marginBottom: "10px",
                 fontWeight: "900",
               }}
             >
               회원가입
             </AppName>
-            <h2>사용자 정보</h2>
             <FieldWrap fieldWidth="100%">
               <Field
                 name={"UserName"}
                 label={"이름"}
                 component={FormInput}
-                validator={emailValidator}
               />
             </FieldWrap>
             <FieldWrap fieldWidth="100%">
               <Field
                 name={"UserId"}
-                label={"아이디"}
+                label={"이메일"}
                 component={FormInput}
                 validator={emailValidator}
               />
@@ -157,16 +160,8 @@ const SignUp: React.FC = () => {
             </FieldWrap>
             <FieldWrap fieldWidth="100%">
               <Field
-                name={"Email"}
-                label={"이메일"}
-                component={FormInput}
-                validator={emailValidator}
-              />
-            </FieldWrap>
-            <FieldWrap fieldWidth="100%">
-              <Field
                 name={"PhoneNumber"}
-                label={"휴대폰 번호"}
+                label={"연락처"}
                 component={FormInput}
                 validator={PhoneNumberValidator}
                 placeholder={"000-0000-0000"}

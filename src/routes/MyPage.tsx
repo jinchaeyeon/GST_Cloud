@@ -298,23 +298,25 @@ const MyPage: React.FC = () => {
               style={{
                 backgroundSize: 0,
                 padding: 0,
-                marginBottom: "40px",
+                marginBottom: "10px",
                 fontWeight: "900",
               }}
             >
               마이페이지
             </AppName>
             <h2>사용자 정보</h2>
-            <FieldWrap fieldWidth="50%">
+            <FieldWrap fieldWidth="100%">
               <Field
                 name={"UserName"}
                 label={"이름"}
                 component={FormInput}
                 validator={emailValidator}
               />
+            </FieldWrap>
+            <FieldWrap fieldWidth="100%">
               <Field
                 name={"UserId"}
-                label={"아이디"}
+                label={"이메일"}
                 component={FormReadOnly}
                 className="readonly"
               />
@@ -327,13 +329,15 @@ const MyPage: React.FC = () => {
                 component={FormInput}
               />
             </FieldWrap>
-            <FieldWrap fieldWidth="50%">
+            <FieldWrap fieldWidth="100%">
               <Field
                 name={"Password"}
                 label={"새 비밀번호"}
                 type={"password"}
                 component={FormInput}
               />
+              </FieldWrap>
+              <FieldWrap fieldWidth="100%">
               <Field
                 name={"PasswordConfirm"}
                 label={"새 비밀번호 확인"}
@@ -341,13 +345,7 @@ const MyPage: React.FC = () => {
                 component={FormInput}
               />
             </FieldWrap>
-            <FieldWrap fieldWidth="50%">
-              <Field
-                name={"Email"}
-                label={"이메일"}
-                component={FormInput}
-                validator={emailValidator}
-              />
+            <FieldWrap fieldWidth="100%">
               <Field
                 name={"PhoneNumber"}
                 label={"휴대폰 번호"}
@@ -358,13 +356,15 @@ const MyPage: React.FC = () => {
             <div>
               <hr />
               <h2>기업용 승인정보</h2>
-              <FieldWrap fieldWidth="50%">
+              <FieldWrap fieldWidth="100%">
                 <Field
                   name={"approvalDate"}
                   label={"승인일"}
                   component={FormReadOnly}
                   className="readonly"
                 />
+                </FieldWrap>
+                <FieldWrap fieldWidth="100%">
                 <Field
                   name={"companyCode"}
                   label={"회사코드"}

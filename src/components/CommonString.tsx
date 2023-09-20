@@ -6,7 +6,7 @@ export const FORM_DATA_INDEX = "formDataIndex";
 export const CLIENT_WIDTH = document.documentElement.clientWidth; // Client 너비값
 export const GRID_MARGIN = 30; //그리드 양쪽 마진값
 export const LAYOUT_GAP = 20; // 레이아웃 컴포넌트 간 공통 GAP 값
-export const GNV_WIDTH = 180; //gnv 너비값
+export const GNV_WIDTH = 190; //gnv 너비값
 export const PAGE_SIZE = 20; //한번에 조회할 데이터 수 디폴트 값
 
 export const COM_CODE_DEFAULT_VALUE = { sub_code: "", code_name: "" };
