@@ -37,7 +37,7 @@ const MyPage: React.FC = () => {
     userId: "",
     userName: "",
     phoneNumber: "",
-    password: "",
+    OldPassword: "",
     email: "",
     companyName: "",
     businessType: "",
@@ -239,18 +239,22 @@ const MyPage: React.FC = () => {
     }
   }
 
-  const onDeleteUser = async () => {
-    if(initialVal.password == "") {
+  const onDeleteUser = async (data: any) => {
+    if(data == "") {
       alert("비밀번호를 입력해주세요.");
     } else {
       if (!window.confirm("회원 탈퇴하시겠습니까?")) {
         return false;
       }
-      let para = Object.assign({}, { password : initialVal.password });
-      const response = await processApi<any>("user-info-delete", para);
-      setToken(null as any);
-      setMenus(null as any);
-      history.replace("/ServiceDashboard");
+      let para = Object.assign({}, { password : data });
+      try {
+        const response = await processApi<any>("user-info-delete", para);
+        setToken(null as any);
+        setMenus(null as any);
+        history.replace("/ServiceDashboard");
+      } catch (e: any) {
+        alert(e.message);
+      }
     }
   };
 
@@ -381,7 +385,7 @@ const MyPage: React.FC = () => {
               type="button"
               themeColor={"info"}
               fillMode="outline"
-              onClick={onDeleteUser}
+              onClick={() => onDeleteUser(formRenderProps.valueGetter("OldPassword"))}
               style={{ width: "100%", marginTop: "30px", height: "50px" }}
             >
               회원 탈퇴
