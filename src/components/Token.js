@@ -4,7 +4,7 @@ import { Button } from "@progress/kendo-react-buttons";
 
 export default function Token(props) {
   const captchaRef = useRef(null);
-
+  
   const Captcha = () => {
     return (
       <div>
@@ -16,12 +16,18 @@ export default function Token(props) {
     );
   };
 
+  const handle = () => {
+    captchaRef.current.reset();
+  }
   useEffect(() => {
-    if(captchaRef != null) {
+    if(props.state === false) {
+        handle();
+        props.propFunction2(true);
+    } else if(props.state === true && captchaRef.current != null){
       const token = captchaRef.current.getValue();
       props.propFunction(token);
     }
-  })
+  },[props])
 
   return (
     <div style={{ marginTop: "20px" }}>

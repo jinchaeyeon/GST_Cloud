@@ -67,41 +67,45 @@ const MyPage: React.FC = () => {
   }, [initialVal]);
 
   const onSubmit = (data: any) => {
-    if (
-      data.CompanyName == "" &&
-      data.BusinessNumber == "" &&
-      data.BusinessOwner == "" &&
-      data.BusinessAddress == "" &&
-      data.BusinessType == "" &&
-      data.BusinessLicense == "" &&
-      data.BusinessCard == ""
-    ) {
-      processUpdate(data);
-    } else if (
-      data.CompanyName == "" ||
-      data.BusinessNumber == "" ||
-      data.BusinessOwner == "" ||
-      data.BusinessAddress == "" ||
-      data.BusinessType == "" ||
-      data.BusinessLicense == "" ||
-      data.BusinessCard == ""
-    ) {
-      if (data.Bus_yn == true && data.Bus_OK_yn == true) {
-        alert("회사 정보를 채워주세요.");
-      } else if (data.Bus_yn == true) {
-        processUpdate(data);
-      } else {
-        alert("기업정보 이용 동의를 해주세요.");
-      }
+    if(data.OldPassword == "") {
+      alert("비밀번호를 입력해주세요.");
     } else {
-      if (data.Bus_yn == true) {
-        if (data.Bus_OK_yn == true) {
-          processBiz(data);
-        } else {
+      if (
+        data.CompanyName == "" &&
+        data.BusinessNumber == "" &&
+        data.BusinessOwner == "" &&
+        data.BusinessAddress == "" &&
+        data.BusinessType == "" &&
+        data.BusinessLicense == "" &&
+        data.BusinessCard == ""
+      ) {
+        processUpdate(data);
+      } else if (
+        data.CompanyName == "" ||
+        data.BusinessNumber == "" ||
+        data.BusinessOwner == "" ||
+        data.BusinessAddress == "" ||
+        data.BusinessType == "" ||
+        data.BusinessLicense == "" ||
+        data.BusinessCard == ""
+      ) {
+        if (data.Bus_yn == true && data.Bus_OK_yn == true) {
+          alert("회사 정보를 채워주세요.");
+        } else if (data.Bus_yn == true) {
           processUpdate(data);
+        } else {
+          alert("기업정보 이용 동의를 해주세요.");
         }
       } else {
-        alert("기업정보 이용 동의를 해주세요.");
+        if (data.Bus_yn == true) {
+          if (data.Bus_OK_yn == true) {
+            processBiz(data);
+          } else {
+            processUpdate(data);
+          }
+        } else {
+          alert("기업정보 이용 동의를 해주세요.");
+        }
       }
     }
   };
@@ -113,10 +117,11 @@ const MyPage: React.FC = () => {
       if (
         para.UserName == undefined ||
         para.UserId == undefined ||
-        para.Email == undefined
+        para.Email == undefined ||
+        para.OldPassword == undefined
       ) {
         alert("사용자 정보를 입력해주세요.");
-      } else if (para.Password != para.PasswordConfirm) {
+      } else if (para.Password != undefined && para.Password != para.PasswordConfirm) {
         alert("비밀번호가 맞지 않습니다.");
       } else {
           setShowLoading(true);
@@ -145,11 +150,9 @@ const MyPage: React.FC = () => {
       para.UserName == undefined ||
       para.UserId == undefined ||
       para.Email == undefined ||
-      para.phoneNumber == undefined
+      para.OldPassword == undefined
     ) {
       alert("사용자 정보를 입력해주세요.");
-    } else if (para.Password != para.PasswordConfirm) {
-      alert("비밀번호가 맞지 않습니다.");
     } else {
       try {
         data = await processApi<any>("user-info-save", para);
@@ -237,13 +240,18 @@ const MyPage: React.FC = () => {
   }
 
   const onDeleteUser = async () => {
-    if (!window.confirm("회원 탈퇴하시겠습니까?")) {
-      return false;
+    if(initialVal.password == "") {
+      alert("비밀번호를 입력해주세요.");
+    } else {
+      if (!window.confirm("회원 탈퇴하시겠습니까?")) {
+        return false;
+      }
+      let para = Object.assign({}, { password : initialVal.password });
+      const response = await processApi<any>("user-info-delete", para);
+      setToken(null as any);
+      setMenus(null as any);
+      history.replace("/ServiceDashboard");
     }
-    const response = await processApi<any>("user-info-delete");
-    setToken(null as any);
-    setMenus(null as any);
-    history.replace("/ServiceDashboard");
   };
 
   const emailValidator = (value: string) =>
@@ -257,8 +265,9 @@ const MyPage: React.FC = () => {
           UserId: initialVal.userId,
           UserName: initialVal.userName,
           PhoneNumber: initialVal.phoneNumber,
+          OldPassword: "",
           PasswordConfirm: "",
-          Password: initialVal.password,
+          Password: "",
           Email: initialVal.email,
           CompanyName: initialVal.companyName,
           BusinessType: initialVal.businessType,
@@ -310,16 +319,24 @@ const MyPage: React.FC = () => {
                 className="readonly"
               />
             </FieldWrap>
+            <FieldWrap fieldWidth="100%">
+            <Field
+                name={"OldPassword"}
+                label={"현재 비밀번호"}
+                type={"password"}
+                component={FormInput}
+              />
+            </FieldWrap>
             <FieldWrap fieldWidth="50%">
               <Field
                 name={"Password"}
-                label={"비밀번호"}
+                label={"새 비밀번호"}
                 type={"password"}
                 component={FormInput}
               />
               <Field
                 name={"PasswordConfirm"}
-                label={"비밀번호 확인"}
+                label={"새 비밀번호 확인"}
                 type={"password"}
                 component={FormInput}
               />

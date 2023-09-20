@@ -58,8 +58,22 @@ const Login: React.FC = () => {
         history.replace("/ServiceDashboard");
       } catch (e: any) {
         console.log("login error", e);
+        if(e.status && e.data.emailVerified != undefined && e.data.emailVerified == false){
+          if(!window.confirm("이메일 인증이 완료되지 않았습니다. 인증 메일을 재발송 하시겠습니까?")){
+            return false
+          }
 
-        alert(e.message);
+          let para2 = Object.assign(
+            {},
+            { email: formData.userId, password: formData.password }
+          );
+  
+          const response2 = await processApi<any>("email", para2);
+
+          console.log(response2);
+        } else {
+          alert(e.data.message);
+        }
       }
     },
     []

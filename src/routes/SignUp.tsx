@@ -37,41 +37,49 @@ const SignUp: React.FC = () => {
   const history = useHistory();
   const processApi = useApi();
   const [value, setValue] = useState<string>("");
+  const [state, setState] = useState<boolean>(true);
 
   const handleSubmit = async (data: { [name: string]: FormData }) => {
-    let para = Object.assign({}, data);
-    let datas = false;
-    if (
-      para.UserName == undefined ||
-      para.UserId == undefined ||
-      para.Password == undefined ||
-      para.PasswordConfirm == undefined ||
-      para.Email == undefined ||
-      para.PhoneNumber == undefined
-    ) {
-      alert("사용자 정보를 입력해주세요.");
-    } else if (para.Password !== para.PasswordConfirm) {
-      alert("비밀번호가 맞지 않습니다.");
-    } else {
-      if (para.User_yn != undefined) {
-        if(value != "") {
-          try {
-            data = await processApi<any>("sign-up", para, value);
-          } catch (e: any) {
-            datas = true;
-            console.log("Sign-up error", e);
-            //setShowLoading(false);
-            alert(e.message);
-          }
-
-          if (datas == false) {
-            alert("회원가입이 완료되었습니다.");
-            history.replace("/");
-          }
-        }
+    try {
+      let para = Object.assign({}, data);
+      let datas = false;
+      if (
+        para.UserName == undefined ||
+        para.UserId == undefined ||
+        para.Password == undefined ||
+        para.PasswordConfirm == undefined ||
+        para.Email == undefined ||
+        para.PhoneNumber == undefined
+      ) {
+        alert("사용자 정보를 입력해주세요.");
+        setState(false);
+      } else if (para.Password !== para.PasswordConfirm) {
+        alert("비밀번호가 맞지 않습니다.");
+        setState(false);
       } else {
-        alert("개인정보 이용 동의를 해주세요");
+        if (para.User_yn != undefined) {
+          if(value != "") {
+            try {
+              data = await processApi<any>("sign-up", para, value);
+            } catch (e: any) {
+              datas = true;
+              console.log("Sign-up error", e);
+              //setShowLoading(false);
+              alert(e.message);
+            }
+  
+            if (datas == false) {
+              alert("회원가입이 완료되었습니다.");
+              history.replace("/");
+            }
+          }
+        } else {
+          alert("개인정보 이용 동의를 해주세요");
+          setState(false);
+        }
       }
+    } catch (e: any) {
+      setState(false);
     }
   };
 
@@ -177,7 +185,8 @@ const SignUp: React.FC = () => {
                 />
               </div>
             </div>
-            <Token propFunction={highFunction} />
+            <p style={{textAlign: "center"}}>※ 회원가입이 처리되면 이메일 확인을 위한 메일이 발송됩니다.</p>
+            <Token propFunction={highFunction} propFunction2={(bool: boolean | ((prevState: boolean) => boolean)) => setState(bool)} state={state}/>
               <Button className="sign-up-btn" themeColor={"primary"}>
                 회원가입
               </Button>

@@ -28,7 +28,8 @@ const domain: any = {
   //메인화면 조회
   "dashboard": { action: "get", url: "c/dashboard/:para" },
 
-
+  "email":  { action: "post", url: "c/send/verify-email" },
+  
   /* GST 기존 API */
   procedure: { action: "post", url: "api/data/sql-procedure" },
   "platform-query": { action: "post", url: "api/data/sql-query" },
@@ -191,7 +192,7 @@ export const useApi = () => {
             // 전체 페이지 reload
             //(window as any).location = "/"; //로그인 실패시 새로고침돼서 일단 주석 처리 해둠
           }
-          reject(res.data);
+          reject(name == "login" ? res : res.data);
         });
     });
   };
